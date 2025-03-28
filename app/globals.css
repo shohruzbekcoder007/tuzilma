@@ -1,0 +1,332 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.org-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  overflow-x: auto;
+  padding: 2rem 1rem;
+  background-color: #f5f5f5;
+}
+
+.org-chart-mobile {
+  padding: 1rem 0.5rem;
+  overflow-x: hidden;
+  background-color: #f5f5f5;
+}
+
+@media (max-width: 768px) {
+  .org-chart {
+    padding: 1rem 0.5rem;
+  }
+}
+
+.org-chart-item {
+  position: relative;
+}
+
+.org-chart-item::before {
+  content: "";
+  position: absolute;
+  left: -33px;
+  top: 50%;
+  width: 34px;
+  height: 2px;
+  background-color: #e5e7eb;
+}
+
+.org-chart-item1::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  width: 16px;
+  height: 2px;
+  background-color: #e5e7eb;
+  display: none;
+}
+
+.org-chart-item1 {
+  position: relative;
+}
+
+.org-chart-item1::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -50%;
+  width: 2px;
+  height: 100%;
+  background-color: #e5e7eb; /* gray-200 */
+}
+
+.rais {
+  position: relative;
+}
+
+.rais::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 2px;
+  height: 2rem;
+  background-color: #e5e7eb;
+}
+
+.rais-direct {
+  position: relative;
+}
+
+.rais-direct::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50px;
+  width: 50%;
+  height: 2px;
+  background-color: #e5e7eb;
+}
+
+.rais-direct::before {
+  content: "";
+  position: absolute;
+  left: calc(100% - 2px);
+  top: 0;
+  width: 4px;
+  height: 50px;
+  /* background-color: var(--background); */
+  background-color: rgb(243 244 246);
+}
+
+.zam {
+  position: relative;
+}
+
+.zam::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: -15px;
+  width: calc(100% + 32px);
+  height: 2px;
+  background-color: #e5e7eb;
+}
+
+.direct {
+  position: relative;
+  z-index: 2;
+}
+
+.direct::before {
+  content: "";
+  position: absolute;
+  /* left: 100%; */
+  left: 0;
+  top: 50%;
+  width: calc(100% + 2rem);
+  height: 2px;
+  background-color: #e5e7eb;
+  z-index: 1;
+}
+
+/* .direct::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -50%;
+  width: 2px;
+  height: 100%;
+  background-color: #e5e7eb;
+} */
+
+.tartib {
+  position: relative;
+}
+
+.tartib::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 2px;
+  height: 2rem;
+  background-color: #e5e7eb;
+}
+
+.zamlar:first-child {
+  position: relative;
+}
+
+.zamlar:first-child::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -2rem;
+  width: 50%;
+  height: 20px;
+  background-color: #f5f5f5;
+  display: block !important;
+}
+
+
+.org-chart-item:first-child::after {
+  top: -16px;
+  height: 16px;
+}
+
+.org-chart-item:last-child::after {
+  height: 16px;
+}
+
+/* Custom color classes for org chart */
+.border-teal-500 {
+  border-color: #14b8a6;
+}
+
+.border-green-500 {
+  border-color: #22c55e;
+}
+
+.border-amber-500 {
+  border-color: #f59e0b;
+}
+
+.from-teal-500 {
+  --tw-gradient-from: #14b8a6 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(20 184 166 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-teal-400 {
+  --tw-gradient-to: #2dd4bf var(--tw-gradient-to-position);
+}
+
+.from-green-500 {
+  --tw-gradient-from: #22c55e var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(34 197 94 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-green-400 {
+  --tw-gradient-to: #4ade80 var(--tw-gradient-to-position);
+}
+
+.from-amber-500 {
+  --tw-gradient-from: #f59e0b var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(245 158 11 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-amber-400 {
+  --tw-gradient-to: #fbbf24 var(--tw-gradient-to-position);
+}
+
+/* .example {
+  display: inline-block;
+} */
+  
+.example::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  position: absolute;
+  z-index: 1000;
+}
+
+.goriz{
+  position: relative;
+}
+
+.goriz:last-child::after {
+  content: "";
+  position: absolute;
+  right: calc(-2rem - 2px);
+  bottom: 0;
+  width: 4px;
+  height: 50%;
+  background-color: #f5f5f5;
+  /* background-color: red; */
+}
