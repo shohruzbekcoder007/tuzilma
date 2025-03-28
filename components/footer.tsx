@@ -11,7 +11,7 @@ export function Footer() {
           <p className="text-xs text-muted-foreground">Манзил: Тошкент шаҳри, Мустақиллик кўчаси, 63-уй</p>
         </div>
         <div className="flex gap-4">
-          <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
+          {/* <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
             Махфийлик сиёсати
           </Link>
           <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
@@ -19,7 +19,7 @@ export function Footer() {
           </Link>
           <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
             Алоқа
-          </Link>
+          </Link> */}
         </div>
       </div>
     </footer>

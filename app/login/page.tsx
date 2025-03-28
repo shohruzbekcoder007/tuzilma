@@ -20,7 +20,7 @@ export default function LoginPage() {
     const password = formData.get('password')
 
     try {
-      const response = await fetch('http://172.16.3.189:8000/api/token', {
+      const response = await fetch('http://172.16.11.27:8124/api/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

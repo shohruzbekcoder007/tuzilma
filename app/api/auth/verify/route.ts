@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   const token = authorization.split(' ')[1]
 
   try {
-    const response = await fetch('http://172.16.3.189:8000/api/token/verify', {
+    const response = await fetch('http://172.16.11.27:8124/api/token/verify', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

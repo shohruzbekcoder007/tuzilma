@@ -25,7 +25,7 @@ export function Header() {
           <span className="text-lg font-semibold">Миллий статистика қўмитаси тузилмаси</span>
         </Link>
         <nav className="hidden md:flex gap-6 items-center">
-          <Link href="/" className="text-sm font-medium hover:text-primary">
+          {/* <Link href="/" className="text-sm font-medium hover:text-primary">
             Бош саҳифа
           </Link>
           <Link href="#" className="text-sm font-medium hover:text-primary">
@@ -39,7 +39,7 @@ export function Header() {
           </Link>
           <Link href="#" className="text-sm font-medium hover:text-primary">
             Алоқа
-          </Link>
+          </Link> */}
           <Button 
             variant="ghost" 
             size="icon"

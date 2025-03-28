@@ -39,7 +39,7 @@ function EmployeeCard({ employee }: EmployeeCardProps) {
   useEffect(() => {
     if(isOpen) {
       setStaff(employee)
-      fetch(`http://172.16.3.189:8000/api/employees/${employee.id}`, {
+      fetch(`http://172.16.11.27:8124/api/employees/${employee.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -216,14 +216,14 @@ export default function OrgChart() {
   }
 
   useEffect(() => {
-    fetch('http://172.16.3.189:8000/api/employees')
+    fetch('http://172.16.11.27:8124/api/employees')
       .then(response => response.json())
       .then(data => setSampleData1(data))
       .catch(error => console.error('Error fetching employees:', error))
   }, [])
 
   useEffect(() => {
-    fetch('http://172.16.3.189:8000/api/employees-ceo')
+    fetch('http://172.16.11.27:8124/api/employees-ceo')
       .then(response => response.json())
       .then(data => setSampleData2(data))
       .catch(error => console.error('Error fetching employees:', error))
