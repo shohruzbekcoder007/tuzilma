@@ -5,9 +5,11 @@ import { Building2, LogOut, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useSearch } from "@/contexts/SearchContext"
 
 export function Header() {
   const router = useRouter()
+  const { setSearchQuery } = useSearch()
 
   const handleLogout = async () => {
     try {
@@ -32,24 +34,10 @@ export function Header() {
               type="search"
               placeholder="Қидириш..."
               className="w-[300px] pl-8"
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <nav className="hidden md:flex gap-6 items-center">
-            {/* <Link href="/" className="text-sm font-medium hover:text-primary">
-              Бош саҳифа
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              Раҳбарият
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              Тузилма
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              Ҳужжатлар
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              Алоқа
-            </Link> */}
             <Button 
               variant="ghost" 
               size="icon"

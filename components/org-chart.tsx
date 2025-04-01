@@ -5,7 +5,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Icons } from "./icons"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
+import { useSearch } from "@/contexts/SearchContext"
 
 interface Employee {
   id: string
@@ -29,10 +30,10 @@ interface Employee {
 
 interface EmployeeCardProps {
   employee: Employee
+  highlight?: boolean
 }
 
-function EmployeeCard({ employee }: EmployeeCardProps) {
-
+function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [staff, setStaff] = useState<Employee>(employee)
 
@@ -43,7 +44,6 @@ function EmployeeCard({ employee }: EmployeeCardProps) {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          // 'Authorization': `Bearer ${document.cookie.split('auth_token=')[1]}`
         }
       }).then(response => response.json()).then(data => {
         console.log(data)
@@ -55,7 +55,7 @@ function EmployeeCard({ employee }: EmployeeCardProps) {
   }, [isOpen])
 
   return (
-    <Card className="p-4 w-[300px] example cursor-pointer relative z-1">
+    <Card className={`p-4 w-[300px] example cursor-pointer relative z-1 ${highlight ? 'ring-2 ring-primary' : ''}`}>
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16 cursor-pointer">
           <AvatarImage
@@ -173,97 +173,144 @@ function EmployeeCard({ employee }: EmployeeCardProps) {
 }
 
 export default function OrgChart() {
-  const [sampleData1, setSampleData1] = useState<Employee>({} as Employee)
-  const [sampleData2, setSampleData2] = useState<Employee[]>([])
+  const [originalData1, setOriginalData1] = useState<Employee>({} as Employee)
+  const [originalData2, setOriginalData2] = useState<Employee[]>([])
+  const { searchQuery } = useSearch()
+
+  const processEmployee = useCallback((employee: Employee, query: string): Employee => {
+    if (!employee) return employee
+
+    const matchesSearch = 
+      (employee.name?.toLowerCase() || '').includes(query) ||
+      (employee.position?.toLowerCase() || '').includes(query) ||
+      (employee.department?.toLowerCase() || '').includes(query)
+
+    const newEmployee = { ...employee }
+    
+    if (matchesSearch) {
+      newEmployee.open = true
+    }
+
+    if (newEmployee.subordinates?.length > 0) {
+      newEmployee.subordinates = newEmployee.subordinates.map(sub => processEmployee(sub, query))
+      if (newEmployee.subordinates.some(sub => sub.open)) {
+        newEmployee.open = true
+      }
+    }
+
+    return newEmployee
+  }, [])
+
+  const sampleData1 = useMemo(() => {
+    if (!searchQuery || !originalData1?.id) return originalData1
+    const query = searchQuery.toLowerCase()
+    return processEmployee({ ...originalData1 }, query)
+  }, [searchQuery, originalData1, processEmployee])
+
+  const sampleData2 = useMemo(() => {
+    if (!searchQuery || !originalData2?.length) return originalData2
+    const query = searchQuery.toLowerCase()
+    return originalData2.map(employee => processEmployee({ ...employee }, query))
+  }, [searchQuery, originalData2, processEmployee])
 
   const handleOpen = (event: React.MouseEvent, employee: Employee) => {
     event.stopPropagation()
-    const updatedData = { ...sampleData1 }
     const findAndUpdateEmployee = (employees: Employee[], targetId: string): boolean => {
       for (const emp of employees) {
         if (emp.id === targetId) {
           emp.open = !emp.open
           return true
         }
-        if (emp.subordinates.length > 0 && findAndUpdateEmployee(emp.subordinates, targetId)) {
+        if (emp.subordinates?.length > 0 && findAndUpdateEmployee(emp.subordinates, targetId)) {
           return true
         }
       }
       return false
     }
 
+    const updatedData = { ...originalData1 }
     findAndUpdateEmployee([updatedData], employee.id)
-    setSampleData1(updatedData)
+    setOriginalData1(updatedData)
   }
 
   const handleOpen2 = (event: React.MouseEvent, employee: Employee) => {
     event.stopPropagation()
-    const updatedData = [...sampleData2]
     const findAndUpdateEmployee = (employees: Employee[], targetId: string): boolean => {
       for (const emp of employees) {
         if (emp.id === targetId) {
           emp.open = !emp.open
           return true
         }
-        if (emp.subordinates.length > 0 && findAndUpdateEmployee(emp.subordinates, targetId)) {
+        if (emp.subordinates?.length > 0 && findAndUpdateEmployee(emp.subordinates, targetId)) {
           return true
         }
       }
       return false
     }
-    findAndUpdateEmployee([...updatedData], employee.id)
-    setSampleData2(updatedData)
+    const updatedData = [...originalData2]
+    findAndUpdateEmployee(updatedData, employee.id)
+    setOriginalData2(updatedData)
   }
 
   useEffect(() => {
     fetch('http://172.16.8.37:8001/api/employees')
       .then(response => response.json())
-      .then(data => setSampleData1(data))
+      .then(data => setOriginalData1(data))
       .catch(error => console.error('Error fetching employees:', error))
   }, [])
 
   useEffect(() => {
     fetch('http://172.16.8.37:8001/api/employees-ceo')
       .then(response => response.json())
-      .then(data => setSampleData2(data))
+      .then(data => setOriginalData2(data))
       .catch(error => console.error('Error fetching employees:', error))
   }, [])
+
+  const isEmployeeHighlighted = useCallback((employee: Employee): boolean => {
+    if (!employee || !searchQuery) return false
+    
+    const query = searchQuery.toLowerCase()
+    return (
+      (employee.name?.toLowerCase() || '').includes(query) ||
+      (employee.position?.toLowerCase() || '').includes(query) ||
+      (employee.department?.toLowerCase() || '').includes(query)
+    )
+  }, [searchQuery])
 
   return (
     <>{
       sampleData1 && (
-
         <div className="flex flex-col items-center gap-8 w-[max-content] mx-auto">
           <div className="rais relative z-10">
-            <EmployeeCard employee={sampleData1} />
+            <EmployeeCard employee={sampleData1} highlight={isEmployeeHighlighted(sampleData1)} />
           </div>
           <div className="flex items-center gap-8 border-t-2 pt-4 tartib" style={{ alignItems: 'start' }}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {sampleData1?.subordinates?.length > 0 && sampleData1?.subordinates?.map((employee) => (
                 <div key={employee.id} className="flex flex-col gap-8 zamlar">
                   <div className="org-chart-item org-chart-item1" onClick={(event) => handleOpen(event, employee)}>
-                    <EmployeeCard employee={employee} />
+                    <EmployeeCard employee={employee} highlight={isEmployeeHighlighted(employee)} />
                   </div>
-                  {employee.open && employee.subordinates.length > 0 && (
+                  {employee.open && employee.subordinates?.length > 0 && (
                     <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
                       {employee.subordinates.map((subordinate) => (
                         <div key={subordinate.id} className="flex flex-col gap-4">
                           <div className="org-chart-item" onClick={(event) => handleOpen(event, subordinate)}>
-                            <EmployeeCard employee={subordinate} />
+                            <EmployeeCard employee={subordinate} highlight={isEmployeeHighlighted(subordinate)} />
                           </div>
-                          {subordinate.open && subordinate.subordinates.length > 0 && (
+                          {subordinate.open && subordinate.subordinates?.length > 0 && (
                             <div key={subordinate.id} className="flex flex-col gap-4">
                               <div className="grid grid-cols-1 gap-4 border-l-2">
                                 {subordinate.subordinates.map((subSubordinate) => (
                                   <div key={subSubordinate.id} className="grid grid-cols-1 gap-4 pl-8 ">
                                     <div className="org-chart-item" onClick={(event) => handleOpen(event, subSubordinate)}>
-                                      <EmployeeCard employee={subSubordinate} />
+                                      <EmployeeCard employee={subSubordinate} highlight={isEmployeeHighlighted(subSubordinate)} />
                                     </div>
-                                    {subSubordinate.open && subSubordinate.subordinates.length > 0 && (
+                                    {subSubordinate.open && subSubordinate.subordinates?.length > 0 && (
                                       <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
                                         {subSubordinate.subordinates.map((subSubSubordinate) => (
                                           <div key={subSubSubordinate.id} className="org-chart-item" onClick={(event) => handleOpen(event, subSubSubordinate)}>
-                                            <EmployeeCard employee={subSubSubordinate} />
+                                            <EmployeeCard employee={subSubSubordinate} highlight={isEmployeeHighlighted(subSubSubordinate)} />
                                           </div>
                                         ))}
                                       </div>
@@ -286,20 +333,20 @@ export default function OrgChart() {
                   <div key={e_sampleData2.id} className="grid grid-cols-1 gap-4 goriz">
                     <div onClick={(event) => handleOpen2(event, e_sampleData2)} className="direct">
                       <div className="relative z-10">
-                        <EmployeeCard employee={e_sampleData2} />
+                        <EmployeeCard employee={e_sampleData2} highlight={isEmployeeHighlighted(e_sampleData2)} />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 gap-4 border-l-2">
-                      {e_sampleData2.open && e_sampleData2.subordinates.map((subordinate) => (
+                      {e_sampleData2.open && e_sampleData2.subordinates?.length > 0 && e_sampleData2.subordinates.map((subordinate) => (
                         <div key={subordinate.id} className="grid grid-cols-1 gap-4 pl-8">
                           <div className="org-chart-item" onClick={(event) => handleOpen2(event, subordinate)}>
-                            <EmployeeCard employee={subordinate} />
+                            <EmployeeCard employee={subordinate} highlight={isEmployeeHighlighted(subordinate)} />
                           </div>
-                          {subordinate.open && subordinate.subordinates.length > 0 && (
+                          {subordinate.open && subordinate.subordinates?.length > 0 && (
                             <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
                               {subordinate.subordinates.map((subSubordinate) => (
                                 <div key={subSubordinate.id} className="org-chart-item" onClick={(event) => handleOpen2(event, subSubordinate)}>
-                                  <EmployeeCard employee={subSubordinate} />
+                                  <EmployeeCard employee={subSubordinate} highlight={isEmployeeHighlighted(subSubordinate)} />
                                 </div>
                               ))}
                             </div>
