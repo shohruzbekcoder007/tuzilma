@@ -2,16 +2,17 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function POST(request: NextRequest) {
-  const authorization = request.headers.get('authorization')
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  const auth_token = request.cookies.get('auth_token')?.value || request.headers.get('authorization')?.split(' ')[1]
+
+  console.log(auth_token, "<---auth_token")
+
+  if (!auth_token || !auth_token.startsWith('Bearer ')) {
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
     )
   }
-
-  const token = authorization.split(' ')[1]
 
   try {
     const response = await fetch('http://172.16.8.37:8001/api/token/verify', {
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ token: auth_token }),
     })
 
     const data = await response.json()
