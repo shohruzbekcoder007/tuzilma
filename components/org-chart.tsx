@@ -121,6 +121,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
               </DialogTitle>
             </DialogHeader>
             <div className="p-0">
+
               <div className="flex flex-col items-center mb-6">
                 <Avatar className="w-40 h-55 mb-4 rounded-none" style={{ height: '180px', width: '160px' }}>
                   <AvatarImage src={staff.imageUrl} />
@@ -158,11 +159,6 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                     <Icons.phone className="h-5 w-5 text-gray-400" />
                     Мобил телефон: <span>{staff?.mobile_phone || 'Мавжуд эмас'}</span>
                   </div>
-                  
-                  {/* <div className="flex items-center gap-3">
-                    <Icons.mapPin className="h-5 w-5 text-gray-400" />
-                    Система: <span>{staff?.system_join_date || 'Мавжуд эмас'}</span>
-                  </div> */}
                 </div>
             </div>
           </DialogContent>
@@ -231,6 +227,13 @@ export default function OrgChart() {
     const updatedData = { ...originalData1 }
     findAndUpdateEmployee([updatedData], employee.id)
     setOriginalData1(updatedData)
+
+    // Cache the updated data
+    fetch('/api/cache', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data1: updatedData, data2: originalData2 })
+    }).catch(error => console.error('Error caching data:', error))
   }
 
   const handleOpen2 = (event: React.MouseEvent, employee: Employee) => {
@@ -250,20 +253,56 @@ export default function OrgChart() {
     const updatedData = [...originalData2]
     findAndUpdateEmployee(updatedData, employee.id)
     setOriginalData2(updatedData)
+
+    // Cache the updated data
+    fetch('/api/cache', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data1: originalData1, data2: updatedData })
+    }).catch(error => console.error('Error caching data:', error))
+  }
+
+  const fetchAndSetData = async () => {
+    try {
+      // Try to get data from cache first
+      const cacheResponse = await fetch('/api/cache')
+      const cacheData = await cacheResponse.json()
+
+      // console.log(cacheData, "<- cache data")
+
+      if (cacheData.data1 && cacheData.data2) {
+        setOriginalData1(cacheData.data1)
+        setOriginalData2(cacheData.data2)
+        return
+      }
+
+      // If cache miss, fetch from API and cache the results
+      const [data1Response, data2Response] = await Promise.all([
+        fetch('http://172.16.8.37:8001/api/employees'),
+        fetch('http://172.16.8.37:8001/api/employees-ceo')
+      ])
+
+      const [data1, data2] = await Promise.all([
+        data1Response.json(),
+        data2Response.json()
+      ])
+
+      setOriginalData1(data1)
+      setOriginalData2(data2)
+
+      // Cache the fresh data
+      fetch('/api/cache', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data1, data2 })
+      }).catch(error => console.error('Error caching data:', error))
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
   }
 
   useEffect(() => {
-    fetch('http://172.16.8.37:8001/api/employees')
-      .then(response => response.json())
-      .then(data => setOriginalData1(data))
-      .catch(error => console.error('Error fetching employees:', error))
-  }, [])
-
-  useEffect(() => {
-    fetch('http://172.16.8.37:8001/api/employees-ceo')
-      .then(response => response.json())
-      .then(data => setOriginalData2(data))
-      .catch(error => console.error('Error fetching employees:', error))
+    fetchAndSetData()
   }, [])
 
   const isEmployeeHighlighted = useCallback((employee: Employee): boolean => {
