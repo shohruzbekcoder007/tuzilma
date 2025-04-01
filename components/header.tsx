@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { Building2, LogOut } from "lucide-react"
+import { Building2, LogOut, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 export function Header() {
   const router = useRouter()
@@ -24,50 +25,60 @@ export function Header() {
           <Building2 className="h-6 w-6 text-primary" />
           <span className="text-lg font-semibold">Миллий статистика қўмитаси тузилмаси</span>
         </Link>
-        <nav className="hidden md:flex gap-6 items-center">
-          {/* <Link href="/" className="text-sm font-medium hover:text-primary">
-            Бош саҳифа
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-primary">
-            Раҳбарият
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-primary">
-            Тузилма
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-primary">
-            Ҳужжатлар
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-primary">
-            Алоқа
-          </Link> */}
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={handleLogout}
-            className="ml-4"
-          >
-            <LogOut className="h-5 w-5" />
-          </Button>
-        </nav>
-        <button className="md:hidden">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-6 w-6"
-          >
-            <line x1="4" x2="20" y1="12" y2="12" />
-            <line x1="4" x2="20" y1="6" y2="6" />
-            <line x1="4" x2="20" y1="18" y2="18" />
-          </svg>
-          <span className="sr-only">Menyu</span>
-        </button>
+        <div className="flex items-center gap-4">
+          <div className="relative hidden md:block">
+            <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Қидириш..."
+              className="w-[300px] pl-8"
+            />
+          </div>
+          <nav className="hidden md:flex gap-6 items-center">
+            {/* <Link href="/" className="text-sm font-medium hover:text-primary">
+              Бош саҳифа
+            </Link>
+            <Link href="#" className="text-sm font-medium hover:text-primary">
+              Раҳбарият
+            </Link>
+            <Link href="#" className="text-sm font-medium hover:text-primary">
+              Тузилма
+            </Link>
+            <Link href="#" className="text-sm font-medium hover:text-primary">
+              Ҳужжатлар
+            </Link>
+            <Link href="#" className="text-sm font-medium hover:text-primary">
+              Алоқа
+            </Link> */}
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={handleLogout}
+              className="ml-4"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </nav>
+          <button className="md:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-6 w-6"
+            >
+              <line x1="4" x2="20" y1="12" y2="12" />
+              <line x1="4" x2="20" y1="6" y2="6" />
+              <line x1="4" x2="20" y1="18" y2="18" />
+            </svg>
+            <span className="sr-only">Menyu</span>
+          </button>
+        </div>
       </div>
     </header>
   )
