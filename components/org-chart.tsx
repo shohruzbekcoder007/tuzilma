@@ -265,14 +265,14 @@ export default function OrgChart() {
   const fetchAndSetData = async () => {
     try {
       // Try to get data from cache first
-      const cacheResponse = await fetch('/api/cache')
-      const cacheData = await cacheResponse.json()
+      // const cacheResponse = await fetch('/api/cache')
+      // const cacheData = await cacheResponse.json()
 
-      if (cacheData.data1 && cacheData.data2) {
-        setOriginalData1(cacheData.data1)
-        setOriginalData2(cacheData.data2)
-        return
-      }
+      // if (cacheData.data1 && cacheData.data2) {
+      //   setOriginalData1(cacheData.data1)
+      //   setOriginalData2(cacheData.data2)
+      //   return
+      // }
 
       // If cache miss, fetch from API and cache the results
       const [data1Response, data2Response] = await Promise.all([
@@ -289,11 +289,11 @@ export default function OrgChart() {
       setOriginalData2(data2)
 
       // Cache the fresh data
-      fetch('/api/cache', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data1, data2 })
-      }).catch(error => console.error('Error caching data:', error))
+      // fetch('/api/cache', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ data1, data2 })
+      // }).catch(error => console.error('Error caching data:', error))
     } catch (error) {
       console.error('Error fetching data:', error)
     }
