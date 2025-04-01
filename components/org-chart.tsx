@@ -55,7 +55,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   }, [isOpen])
 
   return (
-    <Card className={`p-4 w-[300px] example cursor-pointer relative z-1 ${highlight ? 'ring-2 ring-primary' : ''}`}>
+    <Card id={"employee"+employee.id} className={`p-4 w-[300px] example cursor-pointer relative z-1 ${highlight ? 'ring-2 ring-primary' : ''}`}>
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16 cursor-pointer">
           <AvatarImage
@@ -127,7 +127,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   <AvatarImage src={staff.imageUrl} />
                   <AvatarFallback>{staff.name?.[0]}</AvatarFallback>
                 </Avatar>
-                <h2 className="text-2xl font-bold mb-1">{staff.name}</h2>
+                <h2 className="text-2xl font-bold mb-1 text-center">{staff.name}</h2>
                 <p className="text-gray-600 mb-2">{staff.position}</p>
                 <div className="inline-block bg-primary text-white text-sm px-3 py-1 rounded-full">
                   <p className="text-center">{staff.department}</p>
@@ -307,6 +307,16 @@ export default function OrgChart() {
     if (!employee || !searchQuery) return false
     
     const query = searchQuery.toLowerCase()
+
+    // birinchi eng oxirgi yechim
+    // if((
+    //   (employee.name?.toLowerCase() || '').includes(query) ||
+    //   (employee.position?.toLowerCase() || '').includes(query) ||
+    //   (employee.department?.toLowerCase() || '').includes(query)
+    // )) {
+    //   document.getElementById(`employee${employee.id}`)?.scrollIntoView({behavior: 'smooth'});
+    // }
+
     return (
       (employee.name?.toLowerCase() || '').includes(query) ||
       (employee.position?.toLowerCase() || '').includes(query) ||

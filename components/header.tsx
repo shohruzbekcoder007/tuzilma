@@ -35,6 +35,12 @@ export function Header() {
               placeholder="Қидириш..."
               className="w-[300px] pl-8"
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  // Add your search logic here
+                }
+              }}
             />
           </div>
           <nav className="hidden md:flex gap-6 items-center">
