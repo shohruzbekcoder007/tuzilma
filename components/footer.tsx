@@ -38,6 +38,7 @@ interface Work {
   position: Position | null
   department: Department | null
   section: Section | null
+  employement_form: string
 }
 
 export function Footer() {
@@ -111,29 +112,33 @@ export function Footer() {
                 >
                   <Users className="h-4 w-4"/>  Вакантлар сони - {statistic?.open_work_count} та
                 </Button>
-                <DialogContent className="max-w-[800px] w-[90vw]">
+                <DialogContent className="max-w-[850px] w-[90vw]">
                   <DialogHeader>
                     <DialogTitle>Вакант лавозимлар рўйхати</DialogTitle>
                   </DialogHeader>
                   <div className="overflow-auto max-h-[60vh]">
-                    <table className="w-full">
-                      <thead className="bg-primary/10">
-                        <tr>
-                          <th className="py-2 px-4 text-sm text-left">Лавозим</th>
-                          <th className="py-2 px-4 text-sm text-left">Бўлим</th>
-                          <th className="py-2 px-4 text-sm text-left">Ставка</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {workList.map(work => (
-                          <tr key={work.id} className="border-b">
-                            <td className="py-2 px-4 text-sm">{work.position?.name}</td>
-                            <td className="py-2 px-4 text-sm">{work.department?.name}</td>
-                            <td className="py-2 px-4 text-sm">{work.section?.name}</td>
+                    <div className="overflow-auto max-h-[calc(60vh-4.5rem)]">
+                      <table className="w-full">
+                        <thead className="bg-gray-500/90 sticky top-0">
+                          <tr>
+                            <th className="py-2 px-4 text-sm text-left text-white">Лавозим</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Бўлим</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Ставка</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Штат</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {workList.map(work => (
+                            <tr key={work.id} className="border-b">
+                              <td className="py-2 px-4 text-sm">{work.position?.name}</td>
+                              <td className="py-2 px-4 text-sm">{work.department?.name}</td>
+                              <td className="py-2 px-4 text-sm">{work.section?.name}</td>
+                              <td className="py-2 px-4 text-sm">{work.employement_form}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
