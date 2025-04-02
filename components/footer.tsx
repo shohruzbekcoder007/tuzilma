@@ -122,8 +122,8 @@ export function Footer() {
                         <thead className="bg-gray-500/90 sticky top-0">
                           <tr>
                             <th className="py-2 px-4 text-sm text-left text-white">Лавозим</th>
-                            <th className="py-2 px-4 text-sm text-left text-white">Бўлим</th>
-                            <th className="py-2 px-4 text-sm text-left text-white">Ставка</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Бўлим номи</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Бошқарма номи</th>
                             <th className="py-2 px-4 text-sm text-left text-white">Штат</th>
                           </tr>
                         </thead>
