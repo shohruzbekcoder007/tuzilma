@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useSearch } from "@/contexts/SearchContext"
+import { NotesDropdown } from "./notes-dropdown"
 
 export function Header() {
   const router = useRouter()
@@ -44,17 +45,21 @@ export function Header() {
               }}
             />
           </div>
-          <Button variant="outline" size="sm" className="hidden md:block">
-            XLSX
-          </Button>
+          <a href="http://172.16.8.37:8001/api/employees-export" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" size="sm" className="hidden md:block">
+              XLSX
+            </Button>
+          </a>
           <nav className="hidden md:flex gap-6 items-center">
+            <NotesDropdown />
             <Button 
               variant="ghost" 
-              size="icon"
+              size="sm"
               onClick={handleLogout}
-              className="ml-4"
+              className="flex items-center gap-2"
             >
-              <LogOut className="h-5 w-5" />
+              <LogOut className="h-4 w-4" />
+              <span>Чиқиш</span>
             </Button>
           </nav>
           <button className="md:hidden">

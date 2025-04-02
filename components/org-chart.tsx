@@ -8,6 +8,18 @@ import { Icons } from "./icons"
 import { useEffect, useState, useCallback, useMemo } from "react"
 import { useSearch } from "@/contexts/SearchContext"
 
+interface Institution {
+  institution_type: string
+  institution_name: string
+  degree: string
+  speciality: string
+  diploma_serial: string
+  diploma_number: string
+  diploma_type: string
+  edu_starting_date: string
+  edu_finishing_date: string
+}
+
 interface Employee {
   id: string
   name: string
@@ -26,6 +38,9 @@ interface Employee {
   age?: number
   employees?: number
   time_in_system?: string
+  document?: string,
+  user_id?: number
+  institutions?: Institution[]
 }
 
 interface EmployeeCardProps {
@@ -37,10 +52,35 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [staff, setStaff] = useState<Employee>(employee)
 
+  const dataToString = (date: string) => {
+    const dateObj = new Date(date)
+    let year = dateObj.getFullYear();
+    let month = dateObj.getMonth() + 1;
+    let day = dateObj.getDate();
+    let monthStr = "";
+
+    switch (month) {
+      case 1: monthStr = "январ"; break;
+      case 2: monthStr = "феврал"; break;
+      case 3: monthStr = "март"; break;
+      case 4: monthStr = "апрел"; break;
+      case 5: monthStr = "май"; break;
+      case 6: monthStr = "июнь"; break;
+      case 7: monthStr = "июль"; break;
+      case 8: monthStr = "август"; break;
+      case 9: monthStr = "сентябрь"; break;
+      case 10: monthStr = "октябрь"; break;
+      case 11: monthStr = "ноябрь"; break;
+      case 12: monthStr = "декабрь"; break;
+    }
+    
+    return `${day} ${monthStr} ${year} йил`
+  }
+
   useEffect(() => {
-    if(isOpen) {
+    if (isOpen) {
       setStaff(employee)
-      fetch(`http://172.16.3.189:8000/api/employees/${employee.id}`, {
+      fetch(`http://172.16.8.37:8001/api/employees/${employee.user_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +95,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   }, [isOpen])
 
   return (
-    <Card id={"employee"+employee.id} className={`p-4 w-[300px] example cursor-pointer relative z-1 ${highlight ? 'ring-2 ring-primary' : ''}`}>
+    <Card id={"employee" + employee.id} className={`p-4 w-[300px] example cursor-pointer relative z-1 ${highlight ? 'ring-2 ring-primary' : ''}`}>
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16 cursor-pointer">
           <AvatarImage
@@ -69,17 +109,17 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
           <p className="text-xs text-muted-foreground">{employee.department}</p>
         </div>
       </div>
-      
+
       {employee?.subordinates?.length > 0 && (
         <div className="mt-4">
           <div className="flex flex-wrap gap-2">
             {employee.subordinates.slice(0, 4).map((subordinate) => (
               <Avatar key={subordinate.id} className="h-4 w-4">
-                <AvatarImage src={subordinate.imageUrl}/>
+                <AvatarImage src={subordinate.imageUrl} />
                 <AvatarFallback>{subordinate.name[0]}</AvatarFallback>
               </Avatar>
             ))}
-          <span>{employee?.subordinates?.length > 4 ? '...' : ''}</span>
+            <span>{employee?.subordinates?.length > 4 ? '...' : ''}</span>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
             {employee.employees}та бўйсунувчилар
@@ -87,8 +127,8 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
         </div>
       )}
       <div className="absolute bottom-0 right-0">
-        <Dialog 
-          open={isOpen} 
+        <Dialog
+          open={isOpen}
           onOpenChange={(open) => {
             setIsOpen(open)
             // Stop propagation when dialog is closing
@@ -103,9 +143,9 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
           }}
         >
           <DialogTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={(e) => {
                 e.stopPropagation()
                 setIsOpen(true)
@@ -114,7 +154,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
               <Icons.more className="h-4 w-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md" onClick={(e) => e.stopPropagation()}>
+          <DialogContent onClick={(e) => e.stopPropagation()} className="max-w-[800px] w-[90vw]">
             <DialogHeader>
               <DialogTitle className="sr-only">
                 {staff.name} - {staff.position}
@@ -122,44 +162,92 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
             </DialogHeader>
             <div className="p-0">
 
-              <div className="flex flex-col items-center mb-6">
-                <Avatar className="w-40 h-55 mb-4 rounded-none" style={{ height: '180px', width: '160px' }}>
-                  <AvatarImage src={staff.imageUrl} />
-                  <AvatarFallback>{staff.name?.[0]}</AvatarFallback>
-                </Avatar>
-                <h2 className="text-2xl font-bold mb-1 text-center">{staff.name}</h2>
-                <p className="text-gray-600 mb-2">{staff.position}</p>
-                <div className="inline-block bg-primary text-white text-sm px-3 py-1 rounded-full">
-                  <p className="text-center">{staff.department}</p>
+              <div className="flex flex-row items-center mb-6">
+                <div className="w-[40%] flex items-center justify-center">
+                  <Avatar className="w-45 h-75 mb-4 rounded-none" style={{ height: '180px', width: '160px' }}>
+                    <AvatarImage src={staff.imageUrl} />
+                    <AvatarFallback>{staff.name?.[0]}</AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="w-[60%] flex flex-col items-center">
+                  <h2 className="text-2xl font-bold mb-1 text-center">{staff.name}</h2>
+                  <p className="text-gray-600 mb-2 text-center">{staff.position}</p>
+                  <div className="inline-block bg-primary text-white text-sm px-3 py-1 rounded-full my-auto">
+                    <p className="text-center">{staff.department}</p>
+                  </div>
+                  <div className="flex items-center gap-3 justify-center my-3">
+                <a href={staff?.document} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="hidden md:block my-auto">
+                    Маълумотномани юклаб олиш
+                  </Button>
+                </a>
+              </div>
                 </div>
               </div>
 
-              <div className="space-y-4">
+              
+              <div className="flex flex-row mb-8 gap-3">
+                <div className="space-y-4 w-full">
                   <div className="flex items-center gap-3">
                     <Icons.circleUser className="h-5 w-5 text-gray-400" />
-                    Ёши: <span>{staff?.age || 'Мавжуд эмас'}</span>
+                    <p className="text-sm">Ёши: <span>{staff?.age || 'Мавжуд эмас'}</span></p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Icons.education className="h-5 w-5 text-gray-400" />
-                    Маълумоти: <span>{staff?.education || 'Мавжуд эмас'}</span>
+                    <div className="h-5 w-5"><Icons.education className="h-5 w-5 text-gray-400" /></div>
+                    <p className="text-sm">Маълумоти: <span>{staff?.education || 'Мавжуд эмас'}</span></p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Icons.business className="h-5 w-5 text-gray-400" />
-                    Тизимдаги иш стажи: <span>{staff?.time_in_system || 'Мавжуд эмас'}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Icons.calendar className="h-5 w-5 text-gray-400" />
-                    Лавозимга тайинланган санаси: <span>{staff?.appointment_date || 'Мавжуд эмас'}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                  <Icons.phone className="h-5 w-5 text-gray-400" />
-                    IP телефон: <span>{staff?.ip_phone || 'Мавжуд эмас'}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Icons.phone className="h-5 w-5 text-gray-400" />
-                    Мобил телефон: <span>{staff?.mobile_phone || 'Мавжуд эмас'}</span>
+                    <div className="h-5 w-5"><Icons.business className="h-5 w-5 text-gray-400" /></div>
+                    <p className="text-sm">Тизимдаги иш стажи: <span>{staff?.time_in_system || 'Мавжуд эмас'}</span></p>
                   </div>
                 </div>
+                <div className="space-y-4 w-full">
+                  <div className="flex items-center gap-3">
+                    <div className="h-5 w-5"><Icons.calendar className="h-5 w-5 text-gray-400" /></div>
+                    <p className="text-sm">Тайинланган санаси: <span>{staff?.appointment_date ? dataToString(staff?.appointment_date) : 'Мавжуд эмас'}</span></p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="h-5 w-5"><Icons.phone className="h-5 w-5 text-gray-400" /></div>
+                    <p className="text-sm">IP телефон: <span>{staff?.ip_phone || 'Мавжуд эмас'}</span></p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="h-5 w-5"><Icons.phone className="h-5 w-5 text-gray-400" /></div>
+                    <p className="text-sm">Мобил телефон: <span>{staff?.mobile_phone || 'Мавжуд эмас'}</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border rounded-lg overflow-hidden">
+                <div className="bg-primary/10 px-4 py-2 font-medium">
+                  <div className="flex items-center gap-2">
+                    <Icons.education className="h-5 w-5 text-gray-400" />
+                    Таълим муассасалари
+                  </div>
+                </div>
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="py-2 px-4 text-sm" align="left">Муассаса</th>
+                      <th className="py-2 px-4 text-sm" align="left">Даража</th>
+                      <th className="py-2 px-4 text-sm" align="left">Мутахассислик</th>
+                      <th className="py-2 px-4 text-sm" align="left">Тугаллаган санаси</th>
+                      {/* <th className="py-2 px-4" align="left">Диплом рақами</th> */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {staff?.institutions?.map((edu, index) => (
+                      <tr key={index} className="border-b last:border-b-0">
+                        <td className="py-2 px-4 text-sm">{edu.institution_name}</td>
+                        <td className="py-2 px-4 text-sm">{edu.degree}</td>
+                        <td className="py-2 px-4 text-sm">{edu.speciality}</td>
+                        <td className="py-2 px-4 text-sm">{edu.edu_finishing_date}</td>
+                        {/* <td className="py-2 px-4">{edu.diploma_number}</td> */}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
             </div>
           </DialogContent>
         </Dialog>
@@ -176,13 +264,13 @@ export default function OrgChart() {
   const processEmployee = useCallback((employee: Employee, query: string): Employee => {
     if (!employee) return employee
 
-    const matchesSearch = 
+    const matchesSearch =
       (employee.name?.toLowerCase() || '').includes(query) ||
       (employee.position?.toLowerCase() || '').includes(query) ||
       (employee.department?.toLowerCase() || '').includes(query)
 
     const newEmployee = { ...employee }
-    
+
     if (matchesSearch) {
       newEmployee.open = true
     }
@@ -229,11 +317,11 @@ export default function OrgChart() {
     setOriginalData1(updatedData)
 
     // Cache the updated data
-    fetch('/api/cache', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data1: updatedData, data2: originalData2 })
-    }).catch(error => console.error('Error caching data:', error))
+    // fetch('/api/cache', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ data1: updatedData, data2: originalData2 })
+    // }).catch(error => console.error('Error caching data:', error))
   }
 
   const handleOpen2 = (event: React.MouseEvent, employee: Employee) => {
@@ -255,11 +343,11 @@ export default function OrgChart() {
     setOriginalData2(updatedData)
 
     // Cache the updated data
-    fetch('/api/cache', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data1: originalData1, data2: updatedData })
-    }).catch(error => console.error('Error caching data:', error))
+    // fetch('/api/cache', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ data1: originalData1, data2: updatedData })
+    // }).catch(error => console.error('Error caching data:', error))
   }
 
   const fetchAndSetData = async () => {
@@ -276,8 +364,8 @@ export default function OrgChart() {
 
       // If cache miss, fetch from API and cache the results
       const [data1Response, data2Response] = await Promise.all([
-        fetch(`http://172.16.3.189:8000/api/employees`),
-        fetch(`http://172.16.3.189:8000/api/employees-ceo`)
+        fetch(`http://172.16.8.37:8001/api/employees`),
+        fetch(`http://172.16.8.37:8001/api/employees-ceo`)
       ])
 
       const [data1, data2] = await Promise.all([
@@ -305,7 +393,7 @@ export default function OrgChart() {
 
   const isEmployeeHighlighted = useCallback((employee: Employee): boolean => {
     if (!employee || !searchQuery) return false
-    
+
     const query = searchQuery.toLowerCase()
 
     // birinchi eng oxirgi yechim
