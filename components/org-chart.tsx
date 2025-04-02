@@ -265,8 +265,8 @@ export default function OrgChart() {
   const fetchAndSetData = async () => {
     try {
       // Try to get data from cache first
-      const cacheResponse = await fetch('/api/cache')
-      const cacheData = await cacheResponse.json()
+      // const cacheResponse = await fetch('/api/cache')
+      // const cacheData = await cacheResponse.json()
 
       // if (cacheData.data1 && cacheData.data2) {
       //   setOriginalData1(cacheData.data1)
