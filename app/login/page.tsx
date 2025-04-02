@@ -20,7 +20,7 @@ function LoginForm() {
     const password = formData.get('password')
 
     try {
-      const response = await fetch('http://172.16.8.37:8001/api/token', {
+      const response = await fetch('http://172.16.3.189:8000/api/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ function LoginForm() {
       router.push(returnUrl)
     } catch (err) {
       console.error('Login error:', err)
-      setError("Login failed. Please check your credentials.")
+      setError("Тизимга киришда хатолик юз берди. Ҳисоб маълумотларингизни текширинг.")
     } finally {
       setIsLoading(false)
     }

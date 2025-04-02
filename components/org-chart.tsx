@@ -40,7 +40,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   useEffect(() => {
     if(isOpen) {
       setStaff(employee)
-      fetch(`http://172.16.8.37:8001/api/employees/${employee.id}`, {
+      fetch(`http://172.16.3.189:8000/api/employees/${employee.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -265,8 +265,8 @@ export default function OrgChart() {
   const fetchAndSetData = async () => {
     try {
       // Try to get data from cache first
-      // const cacheResponse = await fetch('/api/cache')
-      // const cacheData = await cacheResponse.json()
+      const cacheResponse = await fetch('/api/cache')
+      const cacheData = await cacheResponse.json()
 
       // if (cacheData.data1 && cacheData.data2) {
       //   setOriginalData1(cacheData.data1)
@@ -276,8 +276,8 @@ export default function OrgChart() {
 
       // If cache miss, fetch from API and cache the results
       const [data1Response, data2Response] = await Promise.all([
-        fetch('http://172.16.8.37:8001/api/employees'),
-        fetch('http://172.16.8.37:8001/api/employees-ceo')
+        fetch(`http://172.16.3.189:8000/api/employees`),
+        fetch(`http://172.16.3.189:8000/api/employees-ceo`)
       ])
 
       const [data1, data2] = await Promise.all([

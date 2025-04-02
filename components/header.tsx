@@ -28,6 +28,7 @@ export function Header() {
           <span className="text-lg font-semibold">Миллий статистика қўмитаси тузилмаси</span>
         </Link>
         <div className="flex items-center gap-4">
+          
           <div className="relative hidden md:block">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -43,6 +44,9 @@ export function Header() {
               }}
             />
           </div>
+          <Button variant="outline" size="sm" className="hidden md:block">
+            XLSX
+          </Button>
           <nav className="hidden md:flex gap-6 items-center">
             <Button 
               variant="ghost" 

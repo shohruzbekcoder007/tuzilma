@@ -21,11 +21,13 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const { data1, data2 } = await req.json()
-    const ONE_HOUR = 3600 // 1 hour in seconds
+    // const ONE_HOUR = 3600 // 1 hour in seconds
+    const ONE_MINUTE = 60 // 1 minute in seconds
+
 
     await Promise.all([
-      redis.set('orgData1', JSON.stringify(data1), 'EX', ONE_HOUR),
-      redis.set('orgData2', JSON.stringify(data2), 'EX', ONE_HOUR)
+      redis.set('orgData1', JSON.stringify(data1), 'EX', ONE_MINUTE),
+      redis.set('orgData2', JSON.stringify(data2), 'EX', ONE_MINUTE)
     ])
 
     return NextResponse.json({ success: true })
