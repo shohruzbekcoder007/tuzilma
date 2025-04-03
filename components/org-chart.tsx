@@ -22,6 +22,14 @@ interface Institution {
   edu_finishing_date: string
 }
 
+interface WorkHistory {
+  id: number
+  company_name: string
+  contract_date: string
+  end_date: string
+  position_name: string
+}
+
 interface Employee {
   id: string
   name: string
@@ -40,9 +48,11 @@ interface Employee {
   age?: number
   employees?: number
   time_in_system?: string
-  document?: string,
+  document?: string
   user_id?: number
-  institutions?: Institution[]
+  locality_institutions?: Institution[]
+  foreign_institutions?: Institution[]
+  work_history?: WorkHistory[]
 }
 
 interface EmployeeCardProps {
@@ -238,8 +248,8 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
 
               <Tabs defaultValue="education" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 h-[62px] mb-2 ">
-                  <TabsTrigger value="education" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари <br/>(Махаллий)</TabsTrigger>
-                  <TabsTrigger value="education1" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари <br/>(Хорижий)</TabsTrigger>
+                  <TabsTrigger value="education" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари <br />(Махаллий)</TabsTrigger>
+                  <TabsTrigger value="education1" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари <br />(Хорижий)</TabsTrigger>
                   <TabsTrigger value="general" className="flex items-center gap-2 h-[100%]"><Icons.business className="h-5 w-5 text-gray-400" /> Меҳнат фаолияти</TabsTrigger>
                 </TabsList>
                 <TabsContent value="education">
@@ -254,7 +264,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                         </tr>
                       </thead>
                       <tbody>
-                        {staff?.institutions?.map((edu, index) => (
+                        {staff?.locality_institutions?.map((edu, index) => (
                           <tr key={index} className="border-b last:border-b-0">
                             <td className="py-2 px-4 text-sm">{edu.institution_name}</td>
                             <td className="py-2 px-4 text-sm">{edu.degree}</td>
@@ -267,7 +277,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value="education1">
-                  <div className="border rounded-lg overflow-hidden">
+                <div className="border rounded-lg overflow-hidden">
                     <table className="w-full">
                       <thead className="bg-gray-100">
                         <tr className="border-b">
@@ -278,31 +288,43 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                         </tr>
                       </thead>
                       <tbody>
-                        
+                        {staff?.foreign_institutions?.map((edu, index) => (
+                          <tr key={index} className="border-b last:border-b-0">
+                            <td className="py-2 px-4 text-sm">{edu.institution_name}</td>
+                            <td className="py-2 px-4 text-sm">{edu.degree}</td>
+                            <td className="py-2 px-4 text-sm">{edu.speciality}</td>
+                            <td className="py-2 px-4 text-sm">{edu.edu_finishing_date}</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
                 </TabsContent>
                 <TabsContent value="general">
-                  <div className="space-y-4 w-full">
-                    <div className="flex items-center gap-3">
-                      <Icons.circleUser className="h-5 w-5 text-gray-400" />
-                      <p className="text-sm">Ёши: <span>{staff?.age || 'Мавжуд эмас'}</span></p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Icons.education className="h-5 w-5 text-gray-400" />
-                      <p className="text-sm">Маълумоти: <span>{staff?.education || 'Мавжуд эмас'}</span></p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Icons.business className="h-5 w-5 text-gray-400" />
-                      <p className="text-sm">Тизимдаги иш стажи: <span>{staff?.time_in_system || 'Мавжуд эмас'}</span></p>
-                    </div>
+                  <div className="border rounded-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-100">
+                        <tr className="border-b">
+                          <th className="py-2 px-4 text-sm" align="left">Ташкилот номи</th>
+                          <th className="py-2 px-4 text-sm" align="left">Лавозим</th>
+                          <th className="py-2 px-4 text-sm" align="left">Бошланиш санаси</th>
+                          <th className="py-2 px-4 text-sm" align="left">Тугаллаш санаси</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {staff?.work_history?.map((edu, index) => (
+                          <tr key={index} className="border-b last:border-b-0">
+                            <td className="py-2 px-4 text-sm">{edu.company_name}</td>
+                            <td className="py-2 px-4 text-sm">{edu.position_name}</td>
+                            <td className="py-2 px-4 text-sm">{edu.contract_date}</td>
+                            <td className="py-2 px-4 text-sm">{edu.end_date}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </TabsContent>
               </Tabs>
-
-
-
             </div>
           </DialogContent>
         </Dialog>
@@ -351,6 +373,11 @@ export default function OrgChart() {
     const query = searchQuery.toLowerCase()
     return originalData2.map(employee => processEmployee({ ...employee }, query))
   }, [searchQuery, originalData2, processEmployee])
+
+
+  useEffect(() => {
+    console.log(sampleData2, "<-sampleData2")
+  }, [sampleData2])
 
   const handleOpen = (event: React.MouseEvent, employee: Employee) => {
     event.stopPropagation()
@@ -451,15 +478,6 @@ export default function OrgChart() {
 
     const query = searchQuery.toLowerCase()
 
-    // birinchi eng oxirgi yechim
-    // if((
-    //   (employee.name?.toLowerCase() || '').includes(query) ||
-    //   (employee.position?.toLowerCase() || '').includes(query) ||
-    //   (employee.department?.toLowerCase() || '').includes(query)
-    // )) {
-    //   document.getElementById(`employee${employee.id}`)?.scrollIntoView({behavior: 'smooth'});
-    // }
-
     return (
       (employee.name?.toLowerCase() || '').includes(query) ||
       (employee.position?.toLowerCase() || '').includes(query) ||
@@ -519,7 +537,7 @@ export default function OrgChart() {
             </div>
             <div className="flex flex-col gap-4 border-r-2 pr-8 adetinal">
               {
-                sampleData2.map((e_sampleData2) => (
+                sampleData2 && sampleData2?.map((e_sampleData2) => (
                   <div key={e_sampleData2.id} className="grid grid-cols-1 gap-4 goriz">
                     <div onClick={(event) => handleOpen2(event, e_sampleData2)} className="direct">
                       <div className="relative z-10">
