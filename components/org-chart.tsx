@@ -183,7 +183,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
               <Icons.more className="h-4 w-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent onClick={(e) => e.stopPropagation()} className="max-w-[800px] w-[90vw]">
+          <DialogContent onClick={(e) => e.stopPropagation()} className="max-w-[800px] w-[90vw] max-h-[750px]">
             <DialogHeader>
               <DialogTitle className="sr-only">
                 {staff.name} - {staff.position}
@@ -253,7 +253,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   <TabsTrigger value="general" className="flex items-center gap-2 h-[100%]"><Icons.business className="h-5 w-5 text-gray-400" /> Меҳнат фаолияти</TabsTrigger>
                 </TabsList>
                 <TabsContent value="education">
-                  <div className="border rounded-lg overflow-hidden">
+                  <div className="border rounded-lg overflow-y-auto max-h-[200px]">
                     <table className="w-full">
                       <thead className="bg-gray-100">
                         <tr className="border-b">
@@ -277,7 +277,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value="education1">
-                  <div className="border rounded-lg overflow-hidden">
+                  <div className="border rounded-lg overflow-y-auto max-h-[200px]">
                     <table className="w-full">
                       <thead className="bg-gray-100">
                         <tr className="border-b">
@@ -301,7 +301,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value="general">
-                  <div className="border rounded-lg overflow-hidden">
+                  <div className="border rounded-lg overflow-y-auto max-h-[200px]">
                     <table className="w-full">
                       <thead className="bg-gray-100">
                         <tr className="border-b">
