@@ -253,9 +253,9 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   <TabsTrigger value="general" className="flex items-center gap-2 h-[100%]"><Icons.business className="h-5 w-5 text-gray-400" /> Меҳнат фаолияти</TabsTrigger>
                 </TabsList>
                 <TabsContent value="education">
-                  <div className="border rounded-lg overflow-y-auto max-h-[200px]">
+                  <div className="border rounded-lg overflow-y-auto max-h-[250px]">
                     <table className="w-full">
-                      <thead className="bg-gray-100">
+                      <thead className="bg-gray-100 sticky top-0">
                         <tr className="border-b">
                           <th className="py-2 px-4 text-sm" align="left">Муассаса</th>
                           <th className="py-2 px-4 text-sm" align="left">Даража</th>
@@ -277,9 +277,9 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value="education1">
-                  <div className="border rounded-lg overflow-y-auto max-h-[200px]">
+                  <div className="border rounded-lg overflow-y-auto max-h-[250px]">
                     <table className="w-full">
-                      <thead className="bg-gray-100">
+                      <thead className="bg-gray-100 sticky top-0">
                         <tr className="border-b">
                           <th className="py-2 px-4 text-sm" align="left">Муассаса</th>
                           <th className="py-2 px-4 text-sm" align="left">Даража</th>
@@ -301,9 +301,9 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value="general">
-                  <div className="border rounded-lg overflow-y-auto max-h-[200px]">
+                  <div className="border rounded-lg overflow-y-auto max-h-[250px]">
                     <table className="w-full">
-                      <thead className="bg-gray-100">
+                      <thead className="bg-gray-100 sticky top-0">
                         <tr className="border-b">
                           <th className="py-2 px-4 text-sm" align="left">Ташкилот номи</th>
                           <th className="py-2 px-4 text-sm" align="left">Лавозим</th>
