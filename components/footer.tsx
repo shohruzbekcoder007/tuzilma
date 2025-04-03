@@ -79,7 +79,7 @@ export function Footer() {
 
   return (
     <footer className="w-full border-t bg-background py-2 sticky bottom-0 z-50">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4 px-4 md:px-6">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-2 px-4 md:px-6">
         <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left w-full">
           <p className="text-sm text-muted-foreground">
             {new Date().getFullYear()} Миллий статистика қўмитаси. <br />
@@ -89,10 +89,10 @@ export function Footer() {
         </div>
         <div className="hidden md:block border-l h-[60px] border-[rgb(209 212 218)]"></div>
 
-        <div className="flex gap-6 w-full">
+        <div className="flex gap-2 w-full">
 
           <div className="flex gap-6 justify-between">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 md:px-6">
+            <div className="flex flex-col md:flex-row justify-between gap-2 px-0 md:px-0 pt-2">
               <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left">
                 <p className="text-[12px] text-muted-foreground flex items-center gap-1">
                   <Building className="h-4 w-4" />  Ходимлар - <span className="font-bold text-blue-500">{statistic?.employees_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_count}</span>
@@ -152,22 +152,21 @@ export function Footer() {
                   <Users className="h-4 w-4" />  0,5 ставкалар - <span className="font-bold text-blue-500">{statistic?.half_workers_count}</span>
                 </p>
               </div>
+              <div className="flex flex-col items-center md:items-start text-center md:text-left justify-start">
+                <p className="text-[12px] text-muted-foreground flex items-center gap-1">
+                  <Users className="h-4 w-4" />  Эркаклар сони - <span className="font-bold text-blue-500">{statistic?.male_employees}</span>
+                </p>
+                <p className="text-[12px] text-muted-foreground flex items-center gap-1 my-[6px]">
+                  <Users className="h-4 w-4" />  Aёллар сони - <span className="font-bold text-blue-500">{statistic?.female_employees}</span>
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <p className="text-[12px] text-muted-foreground flex items-center gap-1">
-                <Users className="h-4 w-4" />  Эркаклар сони - <span className="font-bold text-blue-500">{statistic?.male_employees}</span>
-              </p>
-              <p className="text-[12px] text-muted-foreground flex items-center gap-1 my-[6px]">
-                <Users className="h-4 w-4" />  Aёллар сони - <span className="font-bold text-blue-500">{statistic?.female_employees}</span>
-              </p>
-            </div>
-            <div>
-              <p className="text-[12px] text-muted-foreground flex items-center gap-1 ms-2"> <span className="w-[10px] h-[10px] rounded-full bg-blue-500"></span> Ходимлар сони</p>
-              <p className="text-[12px] text-muted-foreground flex items-center gap-1 ms-2"> <span className="w-[10px] h-[10px] rounded-full bg-green-500"></span> Штатлар сони</p>
-            </div>
+
+          <div className="flex flex-col items-center md:items-start text-center md:text-left justify-end" >
+            <p className="text-[12px] text-muted-foreground flex items-center gap-1 ms-2"> <span className="w-[10px] h-[10px] rounded-full bg-blue-500"></span> Ходимлар сони</p>
+            <p className="text-[12px] text-muted-foreground flex items-center gap-1 ms-2"> <span className="w-[10px] h-[10px] rounded-full bg-green-500"></span> Штатлар сони</p>
           </div>
         </div>
 
