@@ -153,9 +153,19 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center md:items-start text-center md:text-left justify-end">
-            <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-blue-500"></span> Ходимлар сони</p>
-            <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-green-500"></span> Штатлар сони</p>
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
+              <p className="text-[12px] text-muted-foreground flex items-center gap-1">
+                <Users className="h-4 w-4" />  Еркаклар сони - <span className="font-bold text-blue-500">{statistic?.employees_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_count}</span>
+              </p>
+              <p className="text-[12px] text-muted-foreground flex items-center gap-1 my-[6px]">
+                <Users className="h-4 w-4" />  Aёллар сони - <span className="font-bold text-blue-500">{statistic?.employees_management_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_management_count}</span>
+              </p>
+            </div>
+            <div>
+              <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-blue-500"></span> Ходимлар сони</p>
+              <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-green-500"></span> Штатлар сони</p>
+            </div>
           </div>
         </div>
 

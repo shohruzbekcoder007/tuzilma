@@ -277,7 +277,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value="education1">
-                <div className="border rounded-lg overflow-hidden">
+                  <div className="border rounded-lg overflow-hidden">
                     <table className="w-full">
                       <thead className="bg-gray-100">
                         <tr className="border-b">
@@ -362,18 +362,25 @@ export default function OrgChart() {
     return newEmployee
   }, [])
 
-  const sampleData1 = useMemo(() => {
-    if (!searchQuery || !originalData1?.id) return originalData1
-    const query = searchQuery.toLowerCase()
-    return processEmployee({ ...originalData1 }, query)
-  }, [searchQuery, originalData1, processEmployee])
+  const [sampleData1, setSampleData1] = useState(originalData1);
+  const [sampleData2, setSampleData2] = useState(originalData2);
+  useEffect(() => {
+    if (!searchQuery || !originalData1?.id) {
+      setSampleData1(originalData1);
+    } else {
+      const query = searchQuery.toLowerCase();
+      setSampleData1(processEmployee({ ...originalData1 }, query));
+    }
+  }, [searchQuery, originalData1, processEmployee]);
 
-  const sampleData2 = useMemo(() => {
-    if (!searchQuery || !originalData2?.length) return originalData2
-    const query = searchQuery.toLowerCase()
-    return originalData2.map(employee => processEmployee({ ...employee }, query))
-  }, [searchQuery, originalData2, processEmployee])
-
+  useEffect(() => {
+    if (!searchQuery || !originalData2?.length) {
+      setSampleData2(originalData2);
+    } else {
+      const query = searchQuery.toLowerCase();
+      setSampleData2(originalData2.map(employee => processEmployee({ ...employee }, query)));
+    }
+  }, [searchQuery, originalData2, processEmployee]);
 
   useEffect(() => {
     console.log(sampleData2, "<-sampleData2")
