@@ -7,10 +7,30 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useSearch } from "@/contexts/SearchContext"
 import { NotesDropdown } from "./notes-dropdown"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useState, useEffect } from "react"
+
+interface Employee {
+  id: string
+  name: string
+  position: string
+  department: string
+}
 
 export function Header() {
   const router = useRouter()
-  const { setSearchQuery } = useSearch()
+  const { setSearchQuery, searchQuery, searchEmployees, setSearchEmployees } = useSearch()
+  const [searchResults, setSearchResults] = useState<Employee[]>([])
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  useEffect(() => {
+    setSearchResults(searchEmployees)
+    if (searchEmployees.length > 0) {
+      setIsDropdownOpen(true)
+    } else {
+      setIsDropdownOpen(false)
+    }
+  }, [searchEmployees])
 
   const handleLogout = async () => {
     try {
@@ -32,18 +52,60 @@ export function Header() {
           
           <div className="relative hidden md:block">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Қидириш..."
-              className="w-[300px] pl-8"
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  // Add your search logic here
-                }
-              }}
-            />
+            <div className="relative">
+              <Input
+                type="search"
+                placeholder="Қидириш..."
+                className="w-[300px] pl-8"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setIsDropdownOpen(true)
+                }}
+                onFocus={() => setIsDropdownOpen(true)}
+                onBlur={() => {
+                  // Delay hiding dropdown to allow clicking on results
+                  setTimeout(() => setIsDropdownOpen(false), 200)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                  }
+                }}
+              />
+              {isDropdownOpen && (
+                <div className="absolute top-full left-0 w-[300px] mt-1 bg-popover text-popover-foreground shadow-md rounded-md border border-border z-50 py-2">
+                  <div className="max-h-[300px] overflow-auto">
+                    {searchResults.length > 0 ? (
+                      searchResults.map((employee) => (
+                        <button
+                          key={employee.id}
+                          className="w-full px-4 py-2 text-left hover:bg-accent hover:text-accent-foreground flex flex-col gap-0.5"
+                          onClick={() => {
+                            setIsDropdownOpen(false)
+                            const element = document.getElementById(`employee${employee.id}`);
+                            if (element) {
+                              element.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
+                            }
+
+                          }}
+                        >
+                          <div className="font-medium">{employee.name}</div>
+                          <div className="text-sm text-muted-foreground">{employee.position}</div>
+                          <div className="text-xs text-muted-foreground">{employee.department}</div>
+                        </button>
+                      ))
+                    ) : (
+                      searchQuery.trim() && (
+                        <div className="px-4 py-2 text-sm text-muted-foreground">
+                          Натижа топилмади
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <a href="http://172.16.8.37:8001/api/employees-export" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="sm" className="hidden md:block">

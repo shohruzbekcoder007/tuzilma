@@ -49,6 +49,24 @@ interface EmployeeCardProps {
 }
 
 function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
+  const { setSearchEmployees } = useSearch()
+
+  useEffect(() => {
+    if(highlight) {
+      setSearchEmployees((prev: Employee[]) => {
+        const exists = prev.some((emp: Employee) => emp.id == employee.id)
+        if (!exists) {
+          return [...prev, employee]
+        } 
+        else {
+          return prev
+        }
+      })
+    }else{
+      setSearchEmployees((prev: Employee[]) => prev.filter((emp: Employee) => emp.id != employee.id))
+    }
+  }, [highlight, employee.id, setSearchEmployees])
+
   const [isOpen, setIsOpen] = useState(false)
   const [staff, setStaff] = useState<Employee>(employee)
 
@@ -86,7 +104,6 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
           'Content-Type': 'application/json',
         }
       }).then(response => response.json()).then(data => {
-        console.log(data)
         setStaff(data)
       }).catch(error => {
         console.error('Error fetching employee details:', error)
@@ -231,7 +248,6 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                       <th className="py-2 px-4 text-sm" align="left">Даража</th>
                       <th className="py-2 px-4 text-sm" align="left">Мутахассислик</th>
                       <th className="py-2 px-4 text-sm" align="left">Тугаллаган санаси</th>
-                      {/* <th className="py-2 px-4" align="left">Диплом рақами</th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -241,7 +257,6 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                         <td className="py-2 px-4 text-sm">{edu.degree}</td>
                         <td className="py-2 px-4 text-sm">{edu.speciality}</td>
                         <td className="py-2 px-4 text-sm">{edu.edu_finishing_date}</td>
-                        {/* <td className="py-2 px-4">{edu.diploma_number}</td> */}
                       </tr>
                     ))}
                   </tbody>
