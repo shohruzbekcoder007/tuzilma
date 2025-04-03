@@ -80,74 +80,85 @@ export function Footer() {
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4 px-4 md:px-6">
         <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left w-full">
           <p className="text-sm text-muted-foreground">
-            {new Date().getFullYear()} Миллий статистика қўмитаси. <br/>
+            {new Date().getFullYear()} Миллий статистика қўмитаси. <br />
             Барча ҳуқуқлар ҳимояланган.
           </p>
           <span className="text-xs text-muted-foreground">Манзил: Тошкент шаҳри, Мустақиллик кўчаси, 63-уй</span>
         </div>
         <div className="hidden md:block border-l h-[60px] border-[rgb(209 212 218)]"></div>
+
         <div className="flex gap-6 w-full">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 md:px-6">
-            <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left">
-              <p className="text-sm text-muted-foreground flex items-center gap-1">
-                <Building className="h-4 w-4"/>  Ходимлар сони - {statistic?.employees_count}/ {statistic?.work_place_count} та
-              </p>
-              <p className="text-sm text-muted-foreground flex items-center gap-1 my-[6px]">
-                <Shield className="h-4 w-4"/>  Бошқарув ходимлар сони - {statistic?.employees_management_count} / {statistic?.work_place_management_count} та
-              </p>
-              <p className="text-sm text-muted-foreground flex items-center gap-1">
-                <Settings className="h-4 w-4"/>  Техник ходимлар сони - {statistic?.employees_technical_count} / {statistic?.work_place_technical_count} та
-              </p>
-            </div>
-            <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left">
-              <p className="text-sm text-muted-foreground flex items-center gap-1 pl-3">
-                <Users className="h-4 w-4"/> Хизмат кўрсатувчи ходимлар сони - {statistic?.employees_service_count} / {statistic?.work_place_service_count} та
-              </p>
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-sm text-muted-foreground flex items-center gap-1"
-                  onClick={() => setIsOpen(true)}
-                >
-                  <Users className="h-4 w-4"/>  Вакантлар сони - {statistic?.open_work_count} та
-                </Button>
-                <DialogContent className="max-w-[850px] w-[90vw]">
-                  <DialogHeader>
-                    <DialogTitle>Вакант лавозимлар рўйхати</DialogTitle>
-                  </DialogHeader>
-                  <div className="overflow-auto max-h-[60vh]">
-                    <div className="overflow-auto max-h-[calc(60vh-4.5rem)]">
-                      <table className="w-full">
-                        <thead className="bg-gray-500/90 sticky top-0">
-                          <tr>
-                            <th className="py-2 px-4 text-sm text-left text-white">Лавозим</th>
-                            <th className="py-2 px-4 text-sm text-left text-white">Бошқарма номи</th>
-                            <th className="py-2 px-4 text-sm text-left text-white">Бўлим номи</th>
-                            <th className="py-2 px-4 text-sm text-left text-white">Штат</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {workList.map(work => (
-                            <tr key={work.id} className="border-b">
-                              <td className="py-2 px-4 text-sm">{work.position?.name}</td>
-                              <td className="py-2 px-4 text-sm">{work.department?.name}</td>
-                              <td className="py-2 px-4 text-sm">{work.section?.name}</td>
-                              <td className="py-2 px-4 text-sm">{work.employement_form}</td>
+
+          <div className="flex gap-6 justify-between">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 md:px-6">
+              <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left">
+                <p className="text-[12px] text-muted-foreground flex items-center gap-1">
+                  <Building className="h-4 w-4" />  Ходимлар - <span className="font-bold text-blue-500">{statistic?.employees_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_count}</span>
+                </p>
+                <p className="text-[12px] text-muted-foreground flex items-center gap-1 my-[6px]">
+                  <Shield className="h-4 w-4" />  Бошқарув ходимлар - <span className="font-bold text-blue-500">{statistic?.employees_management_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_management_count}</span>
+                </p>
+                <p className="text-[12px] text-muted-foreground flex items-center gap-1">
+                  <Settings className="h-4 w-4" />  Техник ходимлар - <span className="font-bold text-blue-500">{statistic?.employees_technical_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_technical_count}</span>
+                </p>
+              </div>
+              <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left">
+                <p className="text-[12px] text-muted-foreground flex items-center gap-1 pl-3">
+                  <Users className="h-4 w-4" /> Хизмат кўрсатувчи - <span className="font-bold text-blue-500">{statistic?.employees_service_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_service_count}</span>
+                </p>
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    style={{ fontSize: '12px' }}
+                    className="text-sm text-muted-foreground flex items-center gap-1"
+                    onClick={() => setIsOpen(true)}
+                  >
+                    <Users className="h-4 w-4" />  Вакантлар - <span className="font-bold text-blue-500">{statistic?.open_work_count}</span>
+                  </Button>
+                  <DialogContent className="max-w-[850px] w-[90vw]">
+                    <DialogHeader>
+                      <DialogTitle>Вакант лавозимлар рўйхати</DialogTitle>
+                    </DialogHeader>
+                    <div className="overflow-auto max-h-[60vh]">
+                      <div className="overflow-auto max-h-[calc(60vh-4.5rem)]">
+                        <table className="w-full">
+                          <thead className="bg-gray-500/90 sticky top-0">
+                            <tr>
+                              <th className="py-2 px-4 text-sm text-left text-white">Лавозим</th>
+                              <th className="py-2 px-4 text-sm text-left text-white">Бошқарма номи</th>
+                              <th className="py-2 px-4 text-sm text-left text-white">Бўлим номи</th>
+                              <th className="py-2 px-4 text-sm text-left text-white">Штат</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {workList.map(work => (
+                              <tr key={work.id} className="border-b">
+                                <td className="py-2 px-4 text-sm">{work.position?.name}</td>
+                                <td className="py-2 px-4 text-sm">{work.department?.name}</td>
+                                <td className="py-2 px-4 text-sm">{work.section?.name}</td>
+                                <td className="py-2 px-4 text-sm">{work.employement_form}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <p className="text-sm text-muted-foreground flex items-center gap-1 pl-3">
-                <Users className="h-4 w-4"/>  0,5 ставкалар сони - {statistic?.half_workers_count} та
-              </p>
+                  </DialogContent>
+                </Dialog>
+                <p className="text-[12px] text-muted-foreground flex items-center gap-1 pl-3">
+                  <Users className="h-4 w-4" />  0,5 ставкалар - <span className="font-bold text-blue-500">{statistic?.half_workers_count}</span>
+                </p>
+              </div>
             </div>
           </div>
+
+          <div className="flex flex-col items-center md:items-start text-center md:text-left justify-end">
+            <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-blue-500"></span> Ходимлар сони</p>
+            <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-green-500"></span> Штат</p>
+          </div>
         </div>
+
       </div>
     </footer>
   )
