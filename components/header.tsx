@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { useSearch } from "@/contexts/SearchContext"
 import { NotesDropdown } from "./notes-dropdown"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { debounce } from "lodash"
 
 interface Employee {
   id: string
@@ -22,15 +23,63 @@ export function Header() {
   const { setSearchQuery, searchQuery, searchEmployees, setSearchEmployees } = useSearch()
   const [searchResults, setSearchResults] = useState<Employee[]>([])
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  // Debounce search query updates
+  const debouncedSetSearchQuery = useCallback(
+    debounce((value: string) => {
+      setSearchQuery(value)
+    }, 30),
+    [setSearchQuery]
+  )
 
   useEffect(() => {
     setSearchResults(searchEmployees)
     if (searchEmployees.length > 0) {
       setIsDropdownOpen(true)
+      setSelectedIndex(-1)
     } else {
       setIsDropdownOpen(false)
     }
   }, [searchEmployees])
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isDropdownOpen) return
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault()
+        setSelectedIndex(prev => 
+          prev < searchResults.length - 1 ? prev + 1 : prev
+        )
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        setSelectedIndex(prev => prev > 0 ? prev - 1 : prev)
+        break
+      case 'Enter':
+        e.preventDefault()
+        if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
+          handleSelectEmployee(searchResults[selectedIndex])
+        }
+        break
+      case 'Escape':
+        e.preventDefault()
+        setIsDropdownOpen(false)
+        searchInputRef.current?.blur()
+        break
+    }
+  }
+
+  const handleSelectEmployee = (employee: Employee) => {
+    setIsDropdownOpen(false)
+    const element = document.getElementById(`employee${employee.id}`)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+    }
+    searchInputRef.current?.blur()
+  }
 
   const handleLogout = async () => {
     try {
@@ -54,41 +103,30 @@ export function Header() {
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <div className="relative">
               <Input
+                ref={searchInputRef}
                 type="search"
                 placeholder="Қидириш..."
                 className="w-[300px] pl-8"
                 value={searchQuery}
                 onChange={(e) => {
-                  setSearchQuery(e.target.value)
-                  setIsDropdownOpen(true)
+                  debouncedSetSearchQuery(e.target.value)
                 }}
                 onFocus={() => setIsDropdownOpen(true)}
-                onBlur={() => {
-                  // Delay hiding dropdown to allow clicking on results
-                  setTimeout(() => setIsDropdownOpen(false), 200)
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                  }
-                }}
+                onKeyDown={handleKeyDown}
               />
               {isDropdownOpen && (
-                <div className="absolute top-full left-0 w-[300px] mt-1 bg-popover text-popover-foreground shadow-md rounded-md border border-border z-50 py-2">
+                <div 
+                  className="absolute top-full left-0 w-[300px] mt-1 bg-popover text-popover-foreground shadow-md rounded-md border border-border z-50 py-2"
+                  onMouseDown={(e) => e.preventDefault()} // Prevent onBlur from firing before click
+                >
                   <div className="max-h-[300px] overflow-auto">
                     {searchResults.length > 0 ? (
-                      searchResults.map((employee) => (
+                      searchResults.map((employee, index) => (
                         <button
                           key={employee.id}
-                          className="w-full px-4 py-2 text-left hover:bg-accent hover:text-accent-foreground flex flex-col gap-0.5"
-                          onClick={() => {
-                            setIsDropdownOpen(false)
-                            const element = document.getElementById(`employee${employee.id}`);
-                            if (element) {
-                              element.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
-                            }
-
-                          }}
+                          className={`w-full px-4 py-2 text-left hover:bg-accent hover:text-accent-foreground flex flex-col gap-0.5 ${index === selectedIndex ? 'bg-accent text-accent-foreground' : ''}`}
+                          onClick={() => handleSelectEmployee(employee)}
+                          onMouseEnter={() => setSelectedIndex(index)}
                         >
                           <div className="font-medium">{employee.name}</div>
                           <div className="text-sm text-muted-foreground">{employee.position}</div>
