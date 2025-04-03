@@ -104,7 +104,7 @@ export function Footer() {
               </div>
               <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left">
                 <p className="text-[12px] text-muted-foreground flex items-center gap-1 pl-3">
-                  <Users className="h-4 w-4" /> Хизмат кўрсатувчи - <span className="font-bold text-blue-500">{statistic?.employees_service_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_service_count}</span>
+                  <Users className="h-4 w-4" /> Хизмат кўрсатувчилар - <span className="font-bold text-blue-500">{statistic?.employees_service_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_service_count}</span>
                 </p>
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                   <Button
@@ -155,7 +155,7 @@ export function Footer() {
 
           <div className="flex flex-col items-center md:items-start text-center md:text-left justify-end">
             <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-blue-500"></span> Ходимлар сони</p>
-            <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-green-500"></span> Штат</p>
+            <p className="text-[12px] text-muted-foreground flex items-center gap-1"> <span className="w-[10px] h-[10px] rounded-full bg-green-500"></span> Штатлар сони</p>
           </div>
         </div>
 

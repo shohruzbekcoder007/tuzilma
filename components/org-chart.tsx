@@ -7,6 +7,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Icons } from "./icons"
 import { useEffect, useState, useCallback, useMemo } from "react"
 import { useSearch } from "@/contexts/SearchContext"
+import { TabsContent } from "@radix-ui/react-tabs"
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs"
 
 interface Institution {
   institution_type: string
@@ -52,17 +54,17 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   const { setSearchEmployees } = useSearch()
 
   useEffect(() => {
-    if(highlight) {
+    if (highlight) {
       setSearchEmployees((prev: Employee[]) => {
         const exists = prev.some((emp: Employee) => emp.id == employee.id)
         if (!exists) {
           return [...prev, employee]
-        } 
+        }
         else {
           return prev
         }
       })
-    }else{
+    } else {
       setSearchEmployees((prev: Employee[]) => prev.filter((emp: Employee) => emp.id != employee.id))
     }
   }, [highlight, employee.id, setSearchEmployees])
@@ -91,7 +93,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
       case 11: monthStr = "ноябрь"; break;
       case 12: monthStr = "декабрь"; break;
     }
-    
+
     return `${day} ${monthStr} ${year} йил`
   }
 
@@ -139,7 +141,7 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
             <span>{employee?.subordinates?.length > 4 ? '...' : ''}</span>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            {employee.employees}та бўйсунувчилар
+            {employee.employees} та бўйсунувчилар
           </p>
         </div>
       )}
@@ -193,16 +195,16 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                     <p className="text-center">{staff.department}</p>
                   </div>
                   <div className="flex items-center gap-3 justify-center my-3">
-                <a href={staff?.document} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="sm" className="hidden md:block my-auto">
-                    Маълумотномани юклаб олиш
-                  </Button>
-                </a>
-              </div>
+                    <a href={staff?.document} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="hidden md:block my-auto">
+                        Маълумотномани юклаб олиш
+                      </Button>
+                    </a>
+                  </div>
                 </div>
               </div>
 
-              
+
               <div className="flex flex-row mb-8 gap-3">
                 <div className="space-y-4 w-full">
                   <div className="flex items-center gap-3">
@@ -234,34 +236,72 @@ function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                 </div>
               </div>
 
-              <div className="border rounded-lg overflow-hidden">
-                <div className="bg-primary/10 px-4 py-2 font-medium">
-                  <div className="flex items-center gap-2">
-                    <Icons.education className="h-5 w-5 text-gray-400" />
-                    Таълим муассасалари
+              <Tabs defaultValue="education" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 h-[62px] mb-2 ">
+                  <TabsTrigger value="education" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари <br/>(Махаллий)</TabsTrigger>
+                  <TabsTrigger value="education1" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари <br/>(Хорижий)</TabsTrigger>
+                  <TabsTrigger value="general" className="flex items-center gap-2 h-[100%]"><Icons.business className="h-5 w-5 text-gray-400" /> Меҳнат фаолияти</TabsTrigger>
+                </TabsList>
+                <TabsContent value="education">
+                  <div className="border rounded-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-100">
+                        <tr className="border-b">
+                          <th className="py-2 px-4 text-sm" align="left">Муассаса</th>
+                          <th className="py-2 px-4 text-sm" align="left">Даража</th>
+                          <th className="py-2 px-4 text-sm" align="left">Мутахассислик</th>
+                          <th className="py-2 px-4 text-sm" align="left">Тугаллаган санаси</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {staff?.institutions?.map((edu, index) => (
+                          <tr key={index} className="border-b last:border-b-0">
+                            <td className="py-2 px-4 text-sm">{edu.institution_name}</td>
+                            <td className="py-2 px-4 text-sm">{edu.degree}</td>
+                            <td className="py-2 px-4 text-sm">{edu.speciality}</td>
+                            <td className="py-2 px-4 text-sm">{edu.edu_finishing_date}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                </div>
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="py-2 px-4 text-sm" align="left">Муассаса</th>
-                      <th className="py-2 px-4 text-sm" align="left">Даража</th>
-                      <th className="py-2 px-4 text-sm" align="left">Мутахассислик</th>
-                      <th className="py-2 px-4 text-sm" align="left">Тугаллаган санаси</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {staff?.institutions?.map((edu, index) => (
-                      <tr key={index} className="border-b last:border-b-0">
-                        <td className="py-2 px-4 text-sm">{edu.institution_name}</td>
-                        <td className="py-2 px-4 text-sm">{edu.degree}</td>
-                        <td className="py-2 px-4 text-sm">{edu.speciality}</td>
-                        <td className="py-2 px-4 text-sm">{edu.edu_finishing_date}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                </TabsContent>
+                <TabsContent value="education1">
+                  <div className="border rounded-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-100">
+                        <tr className="border-b">
+                          <th className="py-2 px-4 text-sm" align="left">Муассаса</th>
+                          <th className="py-2 px-4 text-sm" align="left">Даража</th>
+                          <th className="py-2 px-4 text-sm" align="left">Мутахассислик</th>
+                          <th className="py-2 px-4 text-sm" align="left">Тугаллаган санаси</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </TabsContent>
+                <TabsContent value="general">
+                  <div className="space-y-4 w-full">
+                    <div className="flex items-center gap-3">
+                      <Icons.circleUser className="h-5 w-5 text-gray-400" />
+                      <p className="text-sm">Ёши: <span>{staff?.age || 'Мавжуд эмас'}</span></p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Icons.education className="h-5 w-5 text-gray-400" />
+                      <p className="text-sm">Маълумоти: <span>{staff?.education || 'Мавжуд эмас'}</span></p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Icons.business className="h-5 w-5 text-gray-400" />
+                      <p className="text-sm">Тизимдаги иш стажи: <span>{staff?.time_in_system || 'Мавжуд эмас'}</span></p>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+
+
 
             </div>
           </DialogContent>
