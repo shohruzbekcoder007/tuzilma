@@ -82,7 +82,7 @@ export function Footer() {
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-2 px-4 md:px-6">
 
         <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left w-[30%]">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-[12px]">
             {new Date().getFullYear()} Миллий статистика қўмитаси. <br />
             Барча ҳуқуқлар ҳимояланган.
           </p>
@@ -95,7 +95,7 @@ export function Footer() {
 
           <div className="w-full flex flex-col md:flex-row justify-between gap-2 px-0 md:px-0 pt-2">
 
-            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-between">
+            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-start gap-[5px]">
               <p className="text-[12px] text-muted-foreground flex items-center gap-1">
                 <Users className="h-4 w-4" /> Ходимлар - <span className="font-bold text-blue-500">{statistic?.employees_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_count}</span>
               </p>
@@ -104,7 +104,7 @@ export function Footer() {
               </p>
             </div>
 
-            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-between">
+            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-start gap-[5px]">
               <p className="text-[12px] text-muted-foreground flex items-center gap-1">
                 <UserRoundCog className="h-4 w-4" /> Техник ходимлар - <span className="font-bold text-blue-500">{statistic?.employees_technical_count}</span> / <span className="font-bold text-green-500">{statistic?.work_place_technical_count}</span>
               </p>
@@ -113,7 +113,7 @@ export function Footer() {
               </p>
             </div>
 
-            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-between">
+            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-start gap-[5px]">
               <p className="text-[12px] text-muted-foreground flex items-center gap-1 pl-3">
                 <UserMinus className="h-4 w-4" />  0,5 ставкалар - <span className="font-bold text-blue-500">{statistic?.half_workers_count}</span>
               </p>
@@ -121,7 +121,7 @@ export function Footer() {
                 <Button
                   variant="outline"
                   size="sm"
-                  style={{ fontSize: '12px', transform: 'translateY(4px)' }}
+                  style={{ fontSize: '12px' }}
                   className="text-sm text-muted-foreground flex items-center gap-1"
                   onClick={() => setIsOpen(true)}
                 >
@@ -160,7 +160,7 @@ export function Footer() {
 
             </div>
 
-            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-between">
+            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-start gap-[5px]">
               <p className="text-[12px] text-muted-foreground flex items-center gap-1">
                 <User className="h-4 w-4" />  Эркаклар сони - <span className="font-bold text-blue-500">{statistic?.male_employees}</span>
               </p>
@@ -168,7 +168,7 @@ export function Footer() {
                 <UserRound className="h-4 w-4" />  Aёллар сони - <span className="font-bold text-blue-500">{statistic?.female_employees}</span>
               </p>
             </div>
-            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-between" >
+            <div className="flex flex-col items-center md:items-start gap-0 text-center md:text-left justify-start gap-[5px]" >
               <p className="text-[12px] text-muted-foreground flex items-center gap-1 ms-2"> <span className="w-[10px] h-[10px] rounded-full bg-blue-500"></span> Ходимлар сони</p>
               <p className="text-[12px] text-muted-foreground flex items-center gap-1 ms-2"> <span className="w-[10px] h-[10px] rounded-full bg-green-500"></span> Штатлар сони</p>
             </div>
