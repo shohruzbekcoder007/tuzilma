@@ -33,7 +33,7 @@ function LoginForm() {
       }
 
       const data = await response.json()
-      
+
       // Set the auth token in a cookie
       document.cookie = `auth_token=${data.access}; path=/; max-age=86400` // 24 hours
 
@@ -49,42 +49,45 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex relative bg-white">
+    <div className="min-h-screen flex bg-white">
       {/* Left side - Blue panel with logo */}
-      <div className="hidden md:block md:w-6/12 bg-gradient-to-b from-blue-700 to-blue-500 relative overflow-hidden">
-        <div className="relative z-10 p-12 flex flex-col items-center text-white">
-          <h1 className="text-2xl font-medium mb-12 self-start">Хуш келибсиз</h1>
+      <div className="w-[50%] relative min-h-screen bg-gradient-to-b from-blue-700 to-blue-300">
+        <div className="hidden md:block md:w-12/12 relative overflow-hidden">
+          <div className="z-10 p-12 flex flex-col items-center text-white">
+            <h1 className="text-2xl font-medium mb-12 self-start">Хуш келибсиз</h1>
 
-          <div className="flex flex-col items-center mb-12">
-            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4">
-              <Rocket className="h-10 w-10 text-blue-600" />
+            <div className="flex flex-col items-center mb-12 mt-12">
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4">
+                <Rocket className="h-10 w-10 text-blue-600" />
+              </div>
+              <h2 className="text-2xl font-bold">Миллий статистика қўмитаси тузилмаси</h2>
             </div>
-            <h2 className="text-2xl font-bold">Миллий статистика қўмитаси тузилмаси</h2>
+            <p className="text-sm opacity-80 max-w-xs text-center">
+              Миллий статистика қўмитаси тузилмаси раҳбарияти ва ходимлари ҳақида маълумот
+            </p>
           </div>
-          <p className="text-sm opacity-80 max-w-xs text-center">
-            Миллий статистика қўмитаси тузилмаси раҳбарияти ва ходимлари ҳақида маълумот
-          </p>
+        </div>
+
+        {/* Enhanced Wave divider for desktop */}
+        <div className="absolute top-0 bottom-0 right-[0] w-[300px] hidden md:block overflow-hidden">
+          <svg
+            height="100%"
+            width="100%"
+            viewBox="0 0 200 1000"
+            preserveAspectRatio="none"
+            style={{ position: "absolute", left: 0 }}
+          >
+            <path
+              d="M300,0 L300,1000 L30,1000 
+          C160,750 30,650 100,500 
+          C180,350 80,250 160,100 
+          C200,50 180,0 200,0 Z"
+              fill="white"
+            />
+          </svg>
         </div>
       </div>
 
-      {/* Enhanced Wave divider for desktop */}
-      <div className="absolute top-0 bottom-0 left-[calc(50%-175px)] w-[100px] hidden md:block overflow-hidden">
-        <svg
-          height="100%"
-          width="100%"
-          viewBox="0 0 100 1000"
-          preserveAspectRatio="none"
-          style={{ position: "absolute", left: 0 }}
-        >
-          <path
-            d="M100,0 L100,1000 L0,1000 
-            C80,750 10,650 50,500 
-            C90,350 40,250 80,100 
-            C100,50 90,0 100,0 Z"
-            fill="white"
-          />
-        </svg>
-      </div>
 
       {/* Right side - Login form */}
       <div className="w-full md:w-7/12 md:ml-auto flex items-center justify-center p-8 pt-32 md:pt-8">
