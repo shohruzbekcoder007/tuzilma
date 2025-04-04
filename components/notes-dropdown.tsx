@@ -61,14 +61,14 @@ export function NotesDropdown() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[328px]">
+      <DropdownMenuContent align="end">
         <div className="p-2">
           {/* <Button size="sm" className="w-full flex items-center gap-2 mb-2">
             <Plus className="h-4 w-4" />
             <span>Янги эслатма</span>
           </Button> */}
           
-          <div className="max-h-[400px] overflow-y-auto">
+          <div className="max-h-[300px] overflow-y-auto">
             {loading ? (
               <div className="text-center py-2 text-sm text-muted-foreground">
                 Юкланмоқда...
@@ -78,7 +78,7 @@ export function NotesDropdown() {
                 Бугун туғилган кун йўқ
               </div>
             ) : (
-              <div className="space-y-2 max-h-[300px] overflow-y-auto">
+              <div className="space-y-2">
                 {birthdays.map((person: any) => (
                   <EmployeeCard key={person.id} employee={person} />
                 ))}
