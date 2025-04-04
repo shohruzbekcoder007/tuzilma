@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Notebook } from "lucide-react"
+import { EmployeeCard } from "./org-chart"
 
 export function NotesDropdown() {
   const [birthdays, setBirthdays] = useState<any[]>([])
@@ -24,7 +25,20 @@ export function NotesDropdown() {
     try {
       const response = await fetch('http://172.16.8.37:8001/api/today-birth')
       const data = await response.json()
-      setBirthdays(data)
+      // Format data to match Employee interface
+      const formattedData = data.map((person: any) => ({
+        id: person.id.toString(),
+        name: person.full_name,
+        position: person.position?.name || '',
+        department: person.section?.name || '',
+        imageUrl: person.imageUrl,
+        birth_date: person.birth_date,
+        age: person.age,
+        user_id: person.id,
+        open: false,
+        subordinates: []
+      }))
+      setBirthdays(formattedData)
     } catch (error) {
       console.error('Error fetching birthdays:', error)
     } finally {
@@ -47,7 +61,7 @@ export function NotesDropdown() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[300px]">
+      <DropdownMenuContent align="end" className="w-[328px]">
         <div className="p-2">
           {/* <Button size="sm" className="w-full flex items-center gap-2 mb-2">
             <Plus className="h-4 w-4" />
@@ -66,29 +80,7 @@ export function NotesDropdown() {
             ) : (
               <div className="space-y-2 max-h-[300px] overflow-y-auto">
                 {birthdays.map((person: any) => (
-                  <div
-                    key={person.id}
-                    className="p-3 rounded-md border bg-card text-card-foreground"
-                  >
-                    <div className="flex items-start gap-3">
-                      <img 
-                        src={person.imageUrl} 
-                        alt={person.full_name}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-sm mb-1">{person.full_name}</h3>
-                        <p className="text-xs text-gray-600">{person.position?.name}</p>
-                        <p className="text-xs text-gray-600">{person.section?.name}</p>
-                        <div className="mt-1 text-xs text-gray-400">
-                          Туғилган куни: {new Date(person.birth_date).toLocaleDateString('uz-UZ')}
-                        </div>
-                        <div className="mt-1 text-xs text-gray-400">
-                          Ёши: {person.age}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <EmployeeCard key={person.id} employee={person} />
                 ))}
               </div>
             )}

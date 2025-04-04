@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Icons } from "./icons"
-import { useEffect, useState, useCallback, useMemo } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useSearch } from "@/contexts/SearchContext"
 import { TabsContent } from "@radix-ui/react-tabs"
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs"
@@ -60,7 +60,7 @@ interface EmployeeCardProps {
   highlight?: boolean
 }
 
-function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
+export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   const { setSearchEmployees } = useSearch()
 
   useEffect(() => {
