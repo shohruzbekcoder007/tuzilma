@@ -51,7 +51,7 @@ function LoginForm() {
   return (
     <div className="min-h-screen flex bg-white">
       {/* Left side - Blue panel with logo */}
-      <div className="w-[50%] relative min-h-screen bg-gradient-to-b from-blue-700 to-blue-300">
+      <div className="w-[50%] relative min-h-screen bg-gradient-to-b from-blue-700 to-blue-400">
         <div className="hidden md:block md:w-12/12 relative overflow-hidden">
           <div className="z-10 p-12 flex flex-col items-center text-white">
             <h1 className="text-2xl font-medium mb-12 self-start">Хуш келибсиз</h1>
