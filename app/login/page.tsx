@@ -51,7 +51,7 @@ function LoginForm() {
   return (
     <div className="min-h-screen flex bg-white">
       {/* Left side - Blue panel with logo */}
-      <div className="w-[50%] relative min-h-screen bg-gradient-to-b from-blue-700 to-blue-400">
+      <div className="w-[75%] relative min-h-screen bg-gradient-to-b from-blue-700 to-blue-400">
         <div className="hidden md:block md:w-12/12 relative overflow-hidden">
           <div className="z-10 p-12 flex flex-col items-center text-white">
             <h1 className="text-2xl font-medium mb-12 self-start">Хуш келибсиз</h1>
@@ -69,7 +69,7 @@ function LoginForm() {
         </div>
 
         {/* Enhanced Wave divider for desktop */}
-        <div className="absolute top-0 bottom-0 right-[0] w-[300px] hidden md:block overflow-hidden">
+        {/* <div className="absolute top-0 bottom-0 right-[0] w-[300px] hidden md:block overflow-hidden">
           <svg
             height="100%"
             width="100%"
@@ -85,12 +85,15 @@ function LoginForm() {
               fill="white"
             />
           </svg>
+        </div> */}
+        <div className="absolute top-0 bottom-0 right-[0] w-[300px] h-screen border-l-[400px] border-l-transparent border-b-white-500 hidden md:block overflow-hidden" style={{borderBottom: "calc(100vh) solid white"}}>
+
         </div>
       </div>
 
 
       {/* Right side - Login form */}
-      <div className="w-full md:w-7/12 md:ml-auto flex items-center justify-center p-8 pt-32 md:pt-8">
+      <div className="w-full md:w-7/12 md:ml-auto flex items-center justify-start p-8 pt-32 md:pt-8">
         <div className="w-full max-w-md">
           <h2 className="text-2xl font-bold text-gray-800 mb-8">Кириш</h2>
 
