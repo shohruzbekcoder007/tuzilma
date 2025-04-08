@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useSearch } from "@/contexts/SearchContext"
 import { NotesDropdown } from "./notes-dropdown"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useState, useEffect } from "react"
+import { CustomSelect, OptionType } from "./ui/custom-select"
 
 interface Employee {
   id: string
@@ -22,7 +22,7 @@ export function Header() {
   const { setSearchQuery, searchQuery, searchEmployees, setSearchEmployees } = useSearch()
   const [searchResults, setSearchResults] = useState<Employee[]>([])
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-
+  const [framework, setFramework] = useState<string>("next")
   useEffect(() => {
     setSearchResults(searchEmployees)
     if (searchEmployees.length > 0) {
@@ -41,6 +41,15 @@ export function Header() {
     }
   }
 
+  const frameworks: OptionType[] = [
+    { value: "next", label: "Next.js" },
+    { value: "react", label: "React" },
+    { value: "vue", label: "Vue.js" },
+    { value: "angular", label: "Angular" },
+    { value: "svelte", label: "Svelte" },
+  ]
+
+
   return (
     <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
@@ -49,7 +58,9 @@ export function Header() {
           <span className="text-lg font-semibold">Миллий статистика қўмитаси тузилмаси</span>
         </Link>
         <div className="flex items-center gap-4">
-          
+          <div className="w-[300px]">
+            <CustomSelect options={frameworks} value={framework} onValueChange={setFramework} searchable={false} />
+          </div>
           <div className="relative hidden md:block">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <div className="relative">
@@ -85,7 +96,7 @@ export function Header() {
                             setIsDropdownOpen(false)
                             const element = document.getElementById(`employee${employee.id}`);
                             if (element) {
-                              element.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
+                              element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
                             }
 
                           }}
@@ -114,8 +125,8 @@ export function Header() {
           </a>
           <nav className="hidden md:flex gap-6 items-center">
             <NotesDropdown />
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="sm"
               onClick={handleLogout}
               className="flex items-center gap-2"
