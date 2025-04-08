@@ -11,19 +11,33 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Notebook } from "lucide-react"
 import { EmployeeCard } from "./org-chart"
+import { BASE_URL } from '@/app/utils/API_URLS'
+import { useSearch } from '@/contexts/SearchContext'
 
 export function NotesDropdown() {
   const [birthdays, setBirthdays] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
+  const { optionQuery } = useSearch()
 
   useEffect(() => {
     fetchNotes()
-  }, [])
+  }, [optionQuery])
+
+  function getAuthToken() {
+    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
+    return match ? match[2] : null;
+  }
 
   const fetchNotes = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://172.16.8.37:8001/api/today-birth')
+      const response = await fetch(`${BASE_URL}/api/today-birth?soato=${optionQuery}`, {
+        headers: {
+          'Authorization': `Bearer ${getAuthToken()}`,
+          'Content-Type': 'application/json',
+        },
+      }
+      )
       const data = await response.json()
       // Format data to match Employee interface
       const formattedData = data.map((person: any) => ({
@@ -52,8 +66,8 @@ export function NotesDropdown() {
         <Button variant="outline" size="sm" className="flex items-center gap-2 relative">
           <Notebook className="h-4 w-4" />
           {birthdays.length > 0 && (
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
             >
               {birthdays.length}
@@ -67,7 +81,7 @@ export function NotesDropdown() {
             <Plus className="h-4 w-4" />
             <span>Янги эслатма</span>
           </Button> */}
-          
+
           <div className="max-h-[300px] overflow-y-auto">
             {loading ? (
               <div className="text-center py-2 text-sm text-muted-foreground">

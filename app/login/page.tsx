@@ -2,6 +2,7 @@
 import { Eye, EyeOff, Rocket } from "lucide-react"
 import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { BASE_URL } from "../utils/API_URLS"
 
 function LoginForm() {
   const router = useRouter()
@@ -20,7 +21,7 @@ function LoginForm() {
     const password = formData.get('password')
 
     try {
-      const response = await fetch('http://172.16.8.37:8001/api/token', {
+      const response = await fetch(`${BASE_URL}/api/token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

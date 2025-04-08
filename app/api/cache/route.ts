@@ -21,7 +21,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const { data1, data2 } = await req.json()
-    const ONE_HOUR = 3600 // 1 hour in seconds
+    const ONE_HOUR = 10 // 1 hour in seconds
     // const ONE_MINUTE = 60 // 1 minute in seconds
 
 

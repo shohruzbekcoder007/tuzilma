@@ -9,6 +9,7 @@ import { useSearch } from "@/contexts/SearchContext"
 import { NotesDropdown } from "./notes-dropdown"
 import { useState, useEffect } from "react"
 import { CustomSelect, OptionType } from "./ui/custom-select"
+import { BASE_URL } from "@/app/utils/API_URLS"
 
 interface Employee {
   id: string
@@ -17,12 +18,34 @@ interface Employee {
   department: string
 }
 
+
 export function Header() {
   const router = useRouter()
-  const { setSearchQuery, searchQuery, searchEmployees, setSearchEmployees } = useSearch()
+  const { setSearchQuery, searchQuery, searchEmployees, setSearchEmployees, optionQuery, setOptionQuery } = useSearch()
   const [searchResults, setSearchResults] = useState<Employee[]>([])
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [framework, setFramework] = useState<string>("next")
+  const [regions, setRegions] = useState<OptionType[]>([])
+
+  function getAuthToken() {
+    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
+    return match ? match[2] : null;
+  }
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/api/regions`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`,
+      }
+    }).then(response => response.json()).then(data => {
+      setRegions(data?.data)
+    }).catch(error => {
+      console.error('Error fetching employee details:', error)
+    })
+  }, [])
+
+
   useEffect(() => {
     setSearchResults(searchEmployees)
     if (searchEmployees.length > 0) {
@@ -41,15 +64,6 @@ export function Header() {
     }
   }
 
-  const frameworks: OptionType[] = [
-    { value: "next", label: "Next.js" },
-    { value: "react", label: "React" },
-    { value: "vue", label: "Vue.js" },
-    { value: "angular", label: "Angular" },
-    { value: "svelte", label: "Svelte" },
-  ]
-
-
   return (
     <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
@@ -58,9 +72,14 @@ export function Header() {
           <span className="text-lg font-semibold">Миллий статистика қўмитаси тузилмаси</span>
         </Link>
         <div className="flex items-center gap-4">
-          <div className="w-[300px]">
-            <CustomSelect options={frameworks} value={framework} onValueChange={setFramework} searchable={false} />
-          </div>
+          {
+            regions.length > 0 ? (
+              <div className="w-[300px]">
+                <CustomSelect options={regions} value={optionQuery} onValueChange={setOptionQuery} searchable={false} />
+              </div>
+            ) : (<></>)
+          }
+
           <div className="relative hidden md:block">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <div className="relative">
@@ -118,7 +137,7 @@ export function Header() {
               )}
             </div>
           </div>
-          <a href="http://172.16.8.37:8001/api/employees-export" target="_blank" rel="noopener noreferrer">
+          <a href={`${BASE_URL}/api/employees-export`} target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="sm" className="hidden md:block">
               XLSX
             </Button>

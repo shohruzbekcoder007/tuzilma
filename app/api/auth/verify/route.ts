@@ -1,3 +1,4 @@
+import { BASE_URL } from '@/app/utils/API_URLS'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const response = await fetch('http://172.16.8.37:8001/api/token/verify', {
+    const response = await fetch(`${BASE_URL}/api/token/verify`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

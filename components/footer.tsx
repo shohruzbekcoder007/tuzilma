@@ -4,6 +4,8 @@ import { Briefcase, Building, CircleUserRound, Search, Settings, Shield, User, U
 import { Button } from "./ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
 import { useEffect, useMemo, useState } from "react"
+import { BASE_URL } from "@/app/utils/API_URLS"
+import { useSearch } from "@/contexts/SearchContext"
 
 interface Statistic {
   "employees_count": number,
@@ -48,26 +50,34 @@ export function Footer() {
 
   const [statistic, setStatistic] = useState<Statistic>({} as Statistic)
   const [workList, setWorkList] = useState<Work[]>([] as Work[])
+  const {optionQuery} = useSearch()
+
+  function getAuthToken() {
+    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
+    return match ? match[2] : null;
+  }
 
   useMemo(() => {
-    fetch(`http://172.16.8.37:8001/api/statistic`, {
+    fetch(`${BASE_URL}/api/statistic?soato=${optionQuery}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`,
       }
     }).then(response => response.json()).then(data => {
       setStatistic(data)
     }).catch(error => {
       console.error('Error fetching employee details:', error)
     })
-  }, [])
+  }, [optionQuery])
 
   useEffect(() => {
     if (isOpen) {
-      fetch(`http://172.16.8.37:8001/api/open-work`, {
+      fetch(`${BASE_URL}/api/open-work?soato=${optionQuery}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`,
         }
       }).then(response => response.json()).then(data => {
         setWorkList(data.data.sort((a: Work, b: Work) => a.id - b.id))
@@ -75,7 +85,7 @@ export function Footer() {
         console.error('Error fetching employee details:', error)
       })
     }
-  }, [isOpen])
+  }, [isOpen, optionQuery])
 
   return (
     <footer className="w-full border-t bg-background py-2 sticky bottom-0 z-50">

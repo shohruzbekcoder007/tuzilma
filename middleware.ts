@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { BASE_URL } from './app/utils/API_URLS'
 
 export async function middleware(request: NextRequest) {
   const isAuthenticated = request.cookies.has('auth_token')
@@ -28,7 +29,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
-    const response = await fetch('http://172.16.8.37:8001/api/token/verify', {
+    const response = await fetch(`${BASE_URL}/api/token/verify`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

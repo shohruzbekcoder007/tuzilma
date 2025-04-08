@@ -9,6 +9,7 @@ import { useEffect, useState, useCallback } from "react"
 import { useSearch } from "@/contexts/SearchContext"
 import { TabsContent } from "@radix-ui/react-tabs"
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs"
+import { BASE_URL } from "@/app/utils/API_URLS"
 
 interface Institution {
   institution_type: string
@@ -61,7 +62,7 @@ interface EmployeeCardProps {
 }
 
 export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
-  const { setSearchEmployees } = useSearch()
+  const { setSearchEmployees, optionQuery } = useSearch()
 
   useEffect(() => {
     if (highlight) {
@@ -107,13 +108,20 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
     return `${day} ${monthStr} ${year} йил`
   }
 
+  function getAuthToken() {
+    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
+    return match ? match[2] : null;
+  }
+
+
   useEffect(() => {
     if (isOpen) {
       setStaff(employee)
-      fetch(`http://172.16.8.37:8001/api/employees/${employee.user_id}`, {
+      fetch(`${BASE_URL}/api/employees/${employee.user_id}?soato=${optionQuery}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`,
         }
       }).then(response => response.json()).then(data => {
         setStaff(data)
@@ -121,7 +129,8 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
         console.error('Error fetching employee details:', error)
       })
     }
-  }, [isOpen])
+  }, [isOpen, optionQuery])
+
 
   return (
     <Card id={"employee" + employee.id} className={`p-4 w-[300px] example cursor-pointer relative z-1 ${highlight ? 'ring-2 ring-primary' : ''}`}>
@@ -336,7 +345,7 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
 export default function OrgChart() {
   const [originalData1, setOriginalData1] = useState<Employee>({} as Employee)
   const [originalData2, setOriginalData2] = useState<Employee[]>([])
-  const { searchQuery } = useSearch()
+  const { searchQuery, optionQuery } = useSearch()
 
   const processEmployee = useCallback((employee: Employee, query: string): Employee => {
     if (!employee) return employee
@@ -438,11 +447,20 @@ export default function OrgChart() {
       body: JSON.stringify({ data1: originalData1, data2: updatedData })
     }).catch(error => console.error('Error caching data:', error))
   }
+  function getAuthToken() {
+    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
+    return match ? match[2] : null;
+  }
 
   const fetchAndSetData = async () => {
     try {
       // Try to get data from cache first
-      const cacheResponse = await fetch('/api/cache')
+      const cacheResponse = await fetch('/api/cache', {
+        headers: {
+          'Authorization': `Bearer ${getAuthToken()}`,
+          'Content-Type': 'application/json',
+        },
+      })
       const cacheData = await cacheResponse.json()
 
       if (cacheData.data1 && cacheData.data2) {
@@ -453,8 +471,18 @@ export default function OrgChart() {
 
       // If cache miss, fetch from API and cache the results
       const [data1Response, data2Response] = await Promise.all([
-        fetch(`http://172.16.8.37:8001/api/employees`),
-        fetch(`http://172.16.8.37:8001/api/employees-ceo`)
+        fetch(`${BASE_URL}/api/employees?soato=${optionQuery}`, {
+          headers: {
+            'Authorization': `Bearer ${getAuthToken()}`,
+            'Content-Type': 'application/json',
+          },
+        }),
+        fetch(`${BASE_URL}/api/employees-ceo?soato=${optionQuery}`, {
+          headers: {
+            'Authorization': `Bearer ${getAuthToken()}`,
+            'Content-Type': 'application/json',
+          },
+        })
       ])
 
       const [data1, data2] = await Promise.all([
@@ -478,7 +506,7 @@ export default function OrgChart() {
 
   useEffect(() => {
     fetchAndSetData()
-  }, [])
+  }, [optionQuery])
 
   const isEmployeeHighlighted = useCallback((employee: Employee): boolean => {
     if (!employee || !searchQuery) return false

@@ -39,7 +39,9 @@ interface Employee {
 
 interface SearchContextType {
   searchQuery: string
+  optionQuery: number
   setSearchQuery: (query: string) => void
+  setOptionQuery: (query: number) => void
   focusedEmployeeId: string | null
   setFocusedEmployeeId: (id: string | null) => void
   searchEmployees: Employee[]
@@ -50,6 +52,7 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined)
 
 export function SearchProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [optionQuery, setOptionQuery] = useState(1700)
   const [focusedEmployeeId, setFocusedEmployeeId] = useState<string | null>(null)
   const [searchEmployees, setSearchEmployees] = useState<Employee[]>([])
 
@@ -58,6 +61,9 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       setSearchEmployees([])
     }
   }, [searchQuery])
+  useEffect(() => {
+    console.log(optionQuery, "optionquery")
+  }, [optionQuery])
 
   return (
     <SearchContext.Provider value={{
@@ -66,7 +72,9 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       focusedEmployeeId,
       setFocusedEmployeeId,
       searchEmployees,
-      setSearchEmployees
+      setSearchEmployees,
+      optionQuery, 
+      setOptionQuery
     }}>
       {children}
     </SearchContext.Provider>

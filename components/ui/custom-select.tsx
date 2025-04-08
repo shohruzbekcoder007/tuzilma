@@ -9,15 +9,15 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 export type OptionType = {
-  value: string
+  value: number
   label: string
 }
 
 interface CustomSelectProps {
   options: OptionType[]
   placeholder?: string
-  value?: string
-  onValueChange?: (value: string) => void
+  value?: number
+  onValueChange?: (value: number) => void
   disabled?: boolean
   searchable?: boolean
   className?: string
@@ -35,14 +35,14 @@ export function CustomSelect({
   emptyMessage = "No results found.",
 }: CustomSelectProps) {
   const [open, setOpen] = React.useState(false)
-  const [selectedValue, setSelectedValue] = React.useState<string | undefined>(value)
+  const [selectedValue, setSelectedValue] = React.useState<number | undefined>(value)
 
   React.useEffect(() => {
     setSelectedValue(value)
   }, [value])
 
   const handleSelect = React.useCallback(
-    (currentValue: string) => {
+    (currentValue: number) => {
       setSelectedValue(currentValue)
       onValueChange?.(currentValue)
       setOpen(false)
@@ -76,7 +76,7 @@ export function CustomSelect({
             <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup className="max-h-64 overflow-auto">
               {options.map((option) => (
-                <CommandItem key={option.value} value={option.value} onSelect={handleSelect} className="cursor-pointer">
+                <CommandItem key={option.value} value={String(option.value)} onSelect={(val) => handleSelect(Number(val))} className="cursor-pointer">
                   <Check className={cn("mr-2 h-4 w-4", selectedValue === option.value ? "opacity-100" : "opacity-0")} />
                   {option.label}
                 </CommandItem>
