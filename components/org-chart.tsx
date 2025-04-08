@@ -10,6 +10,7 @@ import { useSearch } from "@/contexts/SearchContext"
 import { TabsContent } from "@radix-ui/react-tabs"
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs"
 import { BASE_URL } from "@/app/utils/API_URLS"
+import { Loader2 } from "lucide-react"
 
 interface Institution {
   institution_type: string
@@ -346,7 +347,7 @@ export default function OrgChart() {
   const [originalData1, setOriginalData1] = useState<Employee>({} as Employee)
   const [originalData2, setOriginalData2] = useState<Employee[]>([])
   const { searchQuery, optionQuery } = useSearch()
-
+  const [loading, setLoading] = useState(true)
   const processEmployee = useCallback((employee: Employee, query: string): Employee => {
     if (!employee) return employee
 
@@ -453,6 +454,7 @@ export default function OrgChart() {
   }
 
   const fetchAndSetData = async () => {
+    setLoading(true)
     try {
       // Try to get data from cache first
       const cacheResponse = await fetch('/api/cache', {
@@ -466,6 +468,7 @@ export default function OrgChart() {
       if (cacheData.data1 && cacheData.data2) {
         setOriginalData1(cacheData.data1)
         setOriginalData2(cacheData.data2)
+        setLoading(false)
         return
       }
 
@@ -501,6 +504,8 @@ export default function OrgChart() {
       }).catch(error => console.error('Error caching data:', error))
     } catch (error) {
       console.error('Error fetching data:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -521,8 +526,12 @@ export default function OrgChart() {
   }, [searchQuery])
 
   return (
-    <>{
-      sampleData1 && (
+    <>{loading ? (
+      <div className="flex flex-col items-center justify-center w-full h-[50vh]">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="mt-4 text-muted-foreground">Маълумотлар юкланмоқда...</p>
+      </div>
+    ) : sampleData1 ? (
         <div className="flex flex-col items-center gap-8 w-[max-content] mx-auto">
           <div className="rais relative z-10">
             <EmployeeCard employee={sampleData1} highlight={isEmployeeHighlighted(sampleData1)} />
@@ -602,6 +611,10 @@ export default function OrgChart() {
               }
             </div>
           </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center w-full h-[50vh]">
+          <p className="text-muted-foreground">Маълумотлар топилмади</p>
         </div>
       )
     }
