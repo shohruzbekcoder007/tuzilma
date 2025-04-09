@@ -429,11 +429,11 @@ export default function OrgChart() {
     setOriginalData1(updatedData)
 
     // Cache the updated data
-    fetch('/api/cache', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data1: updatedData, data2: originalData2 })
-    }).catch(error => console.error('Error caching data:', error))
+    // fetch('/api/cache', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ data1: updatedData, data2: originalData2 })
+    // }).catch(error => console.error('Error caching data:', error))
   }
 
   const handleOpen2 = (event: React.MouseEvent, employee: Employee) => {
@@ -455,11 +455,11 @@ export default function OrgChart() {
     setOriginalData2(updatedData)
 
     // Cache the updated data
-    fetch('/api/cache', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data1: originalData1, data2: updatedData })
-    }).catch(error => console.error('Error caching data:', error))
+    // fetch('/api/cache', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ data1: originalData1, data2: updatedData })
+    // }).catch(error => console.error('Error caching data:', error))
   }
 
 
@@ -467,20 +467,20 @@ export default function OrgChart() {
     setLoading(true)
     try {
       // Try to get data from cache first
-      const cacheResponse = await fetch('/api/cache', {
-        headers: {
-          'Authorization': `Bearer ${getAuthToken()}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      const cacheData = await cacheResponse.json()
+      // const cacheResponse = await fetch('/api/cache', {
+      //   headers: {
+      //     'Authorization': `Bearer ${getAuthToken()}`,
+      //     'Content-Type': 'application/json',
+      //   },
+      // })
+      // const cacheData = await cacheResponse.json()
 
-      if (cacheData.data1 && cacheData.data2) {
-        setOriginalData1(cacheData.data1)
-        setOriginalData2(cacheData.data2)
-        setLoading(false)
-        return
-      }
+      // if (cacheData.data1 && cacheData.data2) {
+      //   setOriginalData1(cacheData.data1)
+      //   setOriginalData2(cacheData.data2)
+      //   setLoading(false)
+      //   return
+      // }
 
       // If cache miss, fetch from API and cache the results
       let data1Response, data2Response;
@@ -527,11 +527,11 @@ export default function OrgChart() {
       setOriginalData2(data2)
 
       // Cache the fresh data
-      fetch('/api/cache', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data1, data2 })
-      }).catch(error => console.error('Error caching data:', error))
+      // fetch('/api/cache', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ data1, data2 })
+      // }).catch(error => console.error('Error caching data:', error))
     } catch (error) {
       console.error('Error fetching data:', error)
     } finally {
