@@ -116,13 +116,19 @@ export function Footer() {
     }
   }, [isOpen, optionQuery])
 
+
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
   return (
     <footer className="w-full border-t bg-background py-2 sticky bottom-0 z-50">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-2 px-4 md:px-6">
 
         <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left w-[30%]">
           <p className="text-muted-foreground text-[12px]">
-            {new Date().getFullYear()} Миллий статистика қўмитаси. <br />
+            {year ? `${year} Миллий статистика қўмитаси.` : "Миллий статистика қўмитаси."} <br />
             Барча ҳуқуқлар ҳимояланган.
           </p>
           <span className="text-xs text-muted-foreground">Манзил: Тошкент шаҳри, Мустақиллик кўчаси, 63-уй</span>
