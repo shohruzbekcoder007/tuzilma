@@ -13,6 +13,7 @@ import { Notebook } from "lucide-react"
 import { EmployeeCard } from "./org-chart"
 import { BASE_URL } from '@/app/utils/API_URLS'
 import { useSearch } from '@/contexts/SearchContext'
+import { getAuthToken } from '@/lib/utils'
 
 export function NotesDropdown() {
   const [birthdays, setBirthdays] = useState<any[]>([])
@@ -23,10 +24,7 @@ export function NotesDropdown() {
     fetchNotes()
   }, [optionQuery])
 
-  function getAuthToken() {
-    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
-    return match ? match[2] : null;
-  }
+
 
   const fetchNotes = async () => {
     setLoading(true)

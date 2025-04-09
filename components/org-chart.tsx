@@ -11,6 +11,7 @@ import { TabsContent } from "@radix-ui/react-tabs"
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs"
 import { BASE_URL } from "@/app/utils/API_URLS"
 import { Loader2 } from "lucide-react"
+import { getAuthToken } from "@/lib/utils"
 
 interface Institution {
   institution_type: string
@@ -109,10 +110,7 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
     return `${day} ${monthStr} ${year} йил`
   }
 
-  function getAuthToken() {
-    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
-    return match ? match[2] : null;
-  }
+
 
 
   useEffect(() => {
@@ -463,10 +461,7 @@ export default function OrgChart() {
       body: JSON.stringify({ data1: originalData1, data2: updatedData })
     }).catch(error => console.error('Error caching data:', error))
   }
-  function getAuthToken() {
-    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
-    return match ? match[2] : null;
-  }
+
 
   const fetchAndSetData = async () => {
     setLoading(true)

@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
 import { useEffect, useMemo, useState } from "react"
 import { BASE_URL } from "@/app/utils/API_URLS"
 import { useSearch } from "@/contexts/SearchContext"
+import { getAuthToken } from "@/lib/utils"
 
 interface Statistic {
   "employees_count": number,
@@ -52,10 +53,7 @@ export function Footer() {
   const [workList, setWorkList] = useState<Work[]>([] as Work[])
   const { optionQuery, regions } = useSearch()
 
-  function getAuthToken() {
-    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
-    return match ? match[2] : null;
-  }
+
 
   useMemo(() => {
     if (regions.length > 0) {

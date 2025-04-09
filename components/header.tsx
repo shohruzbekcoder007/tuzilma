@@ -10,6 +10,7 @@ import { NotesDropdown } from "./notes-dropdown"
 import { useState, useEffect } from "react"
 import { CustomSelect, OptionType } from "./ui/custom-select"
 import { BASE_URL } from "@/app/utils/API_URLS"
+import { getAuthToken } from "@/lib/utils"
 
 interface Employee {
   id: string
@@ -25,10 +26,7 @@ export function Header() {
   const [searchResults, setSearchResults] = useState<Employee[]>([])
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-  function getAuthToken() {
-    const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
-    return match ? match[2] : null;
-  }
+
 
   useEffect(() => {
     fetch(`${BASE_URL}/api/regions`, {
