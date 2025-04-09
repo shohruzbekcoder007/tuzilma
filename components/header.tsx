@@ -21,10 +21,9 @@ interface Employee {
 
 export function Header() {
   const router = useRouter()
-  const { setSearchQuery, searchQuery, searchEmployees, setSearchEmployees, optionQuery, setOptionQuery } = useSearch()
+  const { setSearchQuery, searchQuery, searchEmployees, optionQuery, setOptionQuery, regions, setRegions } = useSearch()
   const [searchResults, setSearchResults] = useState<Employee[]>([])
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [regions, setRegions] = useState<OptionType[]>([])
 
   function getAuthToken() {
     const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));

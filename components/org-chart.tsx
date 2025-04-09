@@ -63,7 +63,7 @@ interface EmployeeCardProps {
 }
 
 export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
-  const { setSearchEmployees, optionQuery } = useSearch()
+  const { setSearchEmployees, optionQuery, regions } = useSearch()
 
   useEffect(() => {
     if (highlight) {
@@ -118,17 +118,32 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   useEffect(() => {
     if (isOpen) {
       setStaff(employee)
-      fetch(`${BASE_URL}/api/employees/${employee.user_id}?soato=${optionQuery}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getAuthToken()}`,
-        }
-      }).then(response => response.json()).then(data => {
-        setStaff(data)
-      }).catch(error => {
-        console.error('Error fetching employee details:', error)
-      })
+      if (regions.length > 0) {
+        fetch(`${BASE_URL}/api/employees/${employee.user_id}?soato=${optionQuery}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`,
+          }
+        }).then(response => response.json()).then(data => {
+          setStaff(data)
+        }).catch(error => {
+          console.error('Error fetching employee details:', error)
+        })
+      } else {
+        fetch(`${BASE_URL}/api/employees/${employee.user_id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`,
+          }
+        }).then(response => response.json()).then(data => {
+          setStaff(data)
+        }).catch(error => {
+          console.error('Error fetching employee details:', error)
+        })
+      }
+
     }
   }, [isOpen, optionQuery])
 
@@ -346,7 +361,7 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
 export default function OrgChart() {
   const [originalData1, setOriginalData1] = useState<Employee>({} as Employee)
   const [originalData2, setOriginalData2] = useState<Employee[]>([])
-  const { searchQuery, optionQuery } = useSearch()
+  const { searchQuery, optionQuery, regions } = useSearch()
   const [loading, setLoading] = useState(true)
   const processEmployee = useCallback((employee: Employee, query: string): Employee => {
     if (!employee) return employee
@@ -473,20 +488,40 @@ export default function OrgChart() {
       }
 
       // If cache miss, fetch from API and cache the results
-      const [data1Response, data2Response] = await Promise.all([
-        fetch(`${BASE_URL}/api/employees?soato=${optionQuery}`, {
-          headers: {
-            'Authorization': `Bearer ${getAuthToken()}`,
-            'Content-Type': 'application/json',
-          },
-        }),
-        fetch(`${BASE_URL}/api/employees-ceo?soato=${optionQuery}`, {
-          headers: {
-            'Authorization': `Bearer ${getAuthToken()}`,
-            'Content-Type': 'application/json',
-          },
-        })
-      ])
+      let data1Response, data2Response;
+
+      if (regions.length > 0) {
+        [data1Response, data2Response] = await Promise.all([
+          fetch(`${BASE_URL}/api/employees?soato=${optionQuery}`, {
+            headers: {
+              'Authorization': `Bearer ${getAuthToken()}`,
+              'Content-Type': 'application/json',
+            },
+          }),
+          fetch(`${BASE_URL}/api/employees-ceo?soato=${optionQuery}`, {
+            headers: {
+              'Authorization': `Bearer ${getAuthToken()}`,
+              'Content-Type': 'application/json',
+            },
+          }),
+        ]);
+      } else {
+        [data1Response, data2Response] = await Promise.all([
+          fetch(`${BASE_URL}/api/employees`, {
+            headers: {
+              'Authorization': `Bearer ${getAuthToken()}`,
+              'Content-Type': 'application/json',
+            },
+          }),
+          fetch(`${BASE_URL}/api/employees-ceo`, {
+            headers: {
+              'Authorization': `Bearer ${getAuthToken()}`,
+              'Content-Type': 'application/json',
+            },
+          }),
+        ]);
+      }
+
 
       const [data1, data2] = await Promise.all([
         data1Response.json(),
@@ -532,91 +567,91 @@ export default function OrgChart() {
         <p className="mt-4 text-muted-foreground">Маълумотлар юкланмоқда...</p>
       </div>
     ) : sampleData1 ? (
-        <div className="flex flex-col items-center gap-8 w-[max-content] mx-auto">
-          <div className="rais relative z-10">
-            <EmployeeCard employee={sampleData1} highlight={isEmployeeHighlighted(sampleData1)} />
-          </div>
-          <div className="flex items-center gap-8 border-t-2 pt-4 tartib" style={{ alignItems: 'start' }}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {sampleData1?.subordinates?.length > 0 && sampleData1?.subordinates?.map((employee) => (
-                <div key={employee.id} className="flex flex-col gap-8 zamlar">
-                  <div className="org-chart-item org-chart-item1" onClick={(event) => handleOpen(event, employee)}>
-                    <EmployeeCard employee={employee} highlight={isEmployeeHighlighted(employee)} />
-                  </div>
-                  {employee.open && employee.subordinates?.length > 0 && (
-                    <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
-                      {employee.subordinates.map((subordinate) => (
-                        <div key={subordinate.id} className="flex flex-col gap-4">
-                          <div className="org-chart-item" onClick={(event) => handleOpen(event, subordinate)}>
-                            <EmployeeCard employee={subordinate} highlight={isEmployeeHighlighted(subordinate)} />
-                          </div>
-                          {subordinate.open && subordinate.subordinates?.length > 0 && (
-                            <div key={subordinate.id} className="flex flex-col gap-4">
-                              <div className="grid grid-cols-1 gap-4 border-l-2">
-                                {subordinate.subordinates.map((subSubordinate) => (
-                                  <div key={subSubordinate.id} className="grid grid-cols-1 gap-4 pl-8 ">
-                                    <div className="org-chart-item" onClick={(event) => handleOpen(event, subSubordinate)}>
-                                      <EmployeeCard employee={subSubordinate} highlight={isEmployeeHighlighted(subSubordinate)} />
-                                    </div>
-                                    {subSubordinate.open && subSubordinate.subordinates?.length > 0 && (
-                                      <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
-                                        {subSubordinate.subordinates.map((subSubSubordinate) => (
-                                          <div key={subSubSubordinate.id} className="org-chart-item" onClick={(event) => handleOpen(event, subSubSubordinate)}>
-                                            <EmployeeCard employee={subSubSubordinate} highlight={isEmployeeHighlighted(subSubSubordinate)} />
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+      <div className="flex flex-col items-center gap-8 w-[max-content] mx-auto">
+        <div className="rais relative z-10">
+          <EmployeeCard employee={sampleData1} highlight={isEmployeeHighlighted(sampleData1)} />
+        </div>
+        <div className="flex items-center gap-8 border-t-2 pt-4 tartib" style={{ alignItems: 'start' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {sampleData1?.subordinates?.length > 0 && sampleData1?.subordinates?.map((employee) => (
+              <div key={employee.id} className="flex flex-col gap-8 zamlar">
+                <div className="org-chart-item org-chart-item1" onClick={(event) => handleOpen(event, employee)}>
+                  <EmployeeCard employee={employee} highlight={isEmployeeHighlighted(employee)} />
                 </div>
-              ))}
-            </div>
-            <div className="flex flex-col gap-4 border-r-2 pr-8 adetinal">
-              {
-                sampleData2 && sampleData2?.map((e_sampleData2) => (
-                  <div key={e_sampleData2.id} className="grid grid-cols-1 gap-4 goriz">
-                    <div onClick={(event) => handleOpen2(event, e_sampleData2)} className="direct">
-                      <div className="relative z-10">
-                        <EmployeeCard employee={e_sampleData2} highlight={isEmployeeHighlighted(e_sampleData2)} />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 border-l-2">
-                      {e_sampleData2.open && e_sampleData2.subordinates?.length > 0 && e_sampleData2.subordinates.map((subordinate) => (
-                        <div key={subordinate.id} className="grid grid-cols-1 gap-4 pl-8">
-                          <div className="org-chart-item" onClick={(event) => handleOpen2(event, subordinate)}>
-                            <EmployeeCard employee={subordinate} highlight={isEmployeeHighlighted(subordinate)} />
-                          </div>
-                          {subordinate.open && subordinate.subordinates?.length > 0 && (
-                            <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
+                {employee.open && employee.subordinates?.length > 0 && (
+                  <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
+                    {employee.subordinates.map((subordinate) => (
+                      <div key={subordinate.id} className="flex flex-col gap-4">
+                        <div className="org-chart-item" onClick={(event) => handleOpen(event, subordinate)}>
+                          <EmployeeCard employee={subordinate} highlight={isEmployeeHighlighted(subordinate)} />
+                        </div>
+                        {subordinate.open && subordinate.subordinates?.length > 0 && (
+                          <div key={subordinate.id} className="flex flex-col gap-4">
+                            <div className="grid grid-cols-1 gap-4 border-l-2">
                               {subordinate.subordinates.map((subSubordinate) => (
-                                <div key={subSubordinate.id} className="org-chart-item" onClick={(event) => handleOpen2(event, subSubordinate)}>
-                                  <EmployeeCard employee={subSubordinate} highlight={isEmployeeHighlighted(subSubordinate)} />
+                                <div key={subSubordinate.id} className="grid grid-cols-1 gap-4 pl-8 ">
+                                  <div className="org-chart-item" onClick={(event) => handleOpen(event, subSubordinate)}>
+                                    <EmployeeCard employee={subSubordinate} highlight={isEmployeeHighlighted(subSubordinate)} />
+                                  </div>
+                                  {subSubordinate.open && subSubordinate.subordinates?.length > 0 && (
+                                    <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
+                                      {subSubordinate.subordinates.map((subSubSubordinate) => (
+                                        <div key={subSubSubordinate.id} className="org-chart-item" onClick={(event) => handleOpen(event, subSubSubordinate)}>
+                                          <EmployeeCard employee={subSubSubordinate} highlight={isEmployeeHighlighted(subSubSubordinate)} />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
                                 </div>
                               ))}
                             </div>
-                          )}
-                        </div>
-                      ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col gap-4 border-r-2 pr-8 adetinal">
+            {
+              sampleData2 && sampleData2?.map((e_sampleData2) => (
+                <div key={e_sampleData2.id} className="grid grid-cols-1 gap-4 goriz">
+                  <div onClick={(event) => handleOpen2(event, e_sampleData2)} className="direct">
+                    <div className="relative z-10">
+                      <EmployeeCard employee={e_sampleData2} highlight={isEmployeeHighlighted(e_sampleData2)} />
                     </div>
                   </div>
-                ))
-              }
-            </div>
+                  <div className="grid grid-cols-1 gap-4 border-l-2">
+                    {e_sampleData2.open && e_sampleData2.subordinates?.length > 0 && e_sampleData2.subordinates.map((subordinate) => (
+                      <div key={subordinate.id} className="grid grid-cols-1 gap-4 pl-8">
+                        <div className="org-chart-item" onClick={(event) => handleOpen2(event, subordinate)}>
+                          <EmployeeCard employee={subordinate} highlight={isEmployeeHighlighted(subordinate)} />
+                        </div>
+                        {subordinate.open && subordinate.subordinates?.length > 0 && (
+                          <div className="grid grid-cols-1 gap-4 pl-8 border-l-2">
+                            {subordinate.subordinates.map((subSubordinate) => (
+                              <div key={subSubordinate.id} className="org-chart-item" onClick={(event) => handleOpen2(event, subSubordinate)}>
+                                <EmployeeCard employee={subSubordinate} highlight={isEmployeeHighlighted(subSubordinate)} />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            }
           </div>
         </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center w-full h-[50vh]">
-          <p className="text-muted-foreground">Маълумотлар топилмади</p>
-        </div>
-      )
+      </div>
+    ) : (
+      <div className="flex flex-col items-center justify-center w-full h-[50vh]">
+        <p className="text-muted-foreground">Маълумотлар топилмади</p>
+      </div>
+    )
     }
     </>
   )

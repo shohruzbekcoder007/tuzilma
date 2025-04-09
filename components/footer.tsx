@@ -50,7 +50,7 @@ export function Footer() {
 
   const [statistic, setStatistic] = useState<Statistic>({} as Statistic)
   const [workList, setWorkList] = useState<Work[]>([] as Work[])
-  const {optionQuery} = useSearch()
+  const { optionQuery, regions } = useSearch()
 
   function getAuthToken() {
     const match = document.cookie.match(new RegExp('(^| )auth_token=([^;]+)'));
@@ -58,32 +58,61 @@ export function Footer() {
   }
 
   useMemo(() => {
-    fetch(`${BASE_URL}/api/statistic?soato=${optionQuery}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getAuthToken()}`,
-      }
-    }).then(response => response.json()).then(data => {
-      setStatistic(data)
-    }).catch(error => {
-      console.error('Error fetching employee details:', error)
-    })
-  }, [optionQuery])
-
-  useEffect(() => {
-    if (isOpen) {
-      fetch(`${BASE_URL}/api/open-work?soato=${optionQuery}`, {
+    if (regions.length > 0) {
+      fetch(`${BASE_URL}/api/statistic?soato=${optionQuery}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${getAuthToken()}`,
         }
       }).then(response => response.json()).then(data => {
-        setWorkList(data.data.sort((a: Work, b: Work) => a.id - b.id))
+        setStatistic(data)
       }).catch(error => {
         console.error('Error fetching employee details:', error)
       })
+    } else {
+      fetch(`${BASE_URL}/api/statistic`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`,
+        }
+      }).then(response => response.json()).then(data => {
+        setStatistic(data)
+      }).catch(error => {
+        console.error('Error fetching employee details:', error)
+      })
+    }
+
+  }, [optionQuery])
+
+  useEffect(() => {
+    if (isOpen) {
+      if (regions.length > 0) {
+        fetch(`${BASE_URL}/api/open-work?soato=${optionQuery}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`,
+          }
+        }).then(response => response.json()).then(data => {
+          setWorkList(data.data.sort((a: Work, b: Work) => a.id - b.id))
+        }).catch(error => {
+          console.error('Error fetching employee details:', error)
+        })
+      } else {
+        fetch(`${BASE_URL}/api/open-work`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`,
+          }
+        }).then(response => response.json()).then(data => {
+          setWorkList(data.data.sort((a: Work, b: Work) => a.id - b.id))
+        }).catch(error => {
+          console.error('Error fetching employee details:', error)
+        })
+      }
     }
   }, [isOpen, optionQuery])
 

@@ -1,5 +1,6 @@
 "use client"
 
+import { OptionType } from '@/components/ui/custom-select'
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 
 interface Institution {
@@ -46,6 +47,8 @@ interface SearchContextType {
   setFocusedEmployeeId: (id: string | null) => void
   searchEmployees: Employee[]
   setSearchEmployees: React.Dispatch<React.SetStateAction<Employee[]>>
+  regions: OptionType[]
+  setRegions: React.Dispatch<React.SetStateAction<OptionType[]>>
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined)
@@ -55,7 +58,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const [optionQuery, setOptionQuery] = useState(1700)
   const [focusedEmployeeId, setFocusedEmployeeId] = useState<string | null>(null)
   const [searchEmployees, setSearchEmployees] = useState<Employee[]>([])
-
+  const [regions, setRegions] = useState<OptionType[]>([])
   useEffect(() => {
     if (searchQuery == '') {
       setSearchEmployees([])
@@ -73,8 +76,10 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       setFocusedEmployeeId,
       searchEmployees,
       setSearchEmployees,
-      optionQuery, 
-      setOptionQuery
+      optionQuery,
+      setOptionQuery,
+      regions, 
+      setRegions,
     }}>
       {children}
     </SearchContext.Provider>

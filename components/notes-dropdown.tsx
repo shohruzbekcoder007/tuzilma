@@ -17,7 +17,7 @@ import { useSearch } from '@/contexts/SearchContext'
 export function NotesDropdown() {
   const [birthdays, setBirthdays] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
-  const { optionQuery } = useSearch()
+  const { optionQuery, regions } = useSearch()
 
   useEffect(() => {
     fetchNotes()
@@ -30,33 +30,64 @@ export function NotesDropdown() {
 
   const fetchNotes = async () => {
     setLoading(true)
-    try {
-      const response = await fetch(`${BASE_URL}/api/today-birth?soato=${optionQuery}`, {
-        headers: {
-          'Authorization': `Bearer ${getAuthToken()}`,
-          'Content-Type': 'application/json',
-        },
+    if (regions.length > 0) {
+      try {
+        const response = await fetch(`${BASE_URL}/api/today-birth?soato=${optionQuery}`, {
+          headers: {
+            'Authorization': `Bearer ${getAuthToken()}`,
+            'Content-Type': 'application/json',
+          },
+        }
+        )
+        const data = await response.json()
+        // Format data to match Employee interface
+        const formattedData = data.map((person: any) => ({
+          id: person.id.toString(),
+          name: person.full_name,
+          position: person.position?.name || '',
+          department: person.section?.name || '',
+          imageUrl: person.imageUrl,
+          birth_date: person.birth_date,
+          age: person.age,
+          user_id: person.id,
+          open: false,
+          subordinates: []
+        }))
+        setBirthdays(formattedData)
+      } catch (error) {
+        console.error('Error fetching birthdays:', error)
+      } finally {
+        setLoading(false)
       }
-      )
-      const data = await response.json()
-      // Format data to match Employee interface
-      const formattedData = data.map((person: any) => ({
-        id: person.id.toString(),
-        name: person.full_name,
-        position: person.position?.name || '',
-        department: person.section?.name || '',
-        imageUrl: person.imageUrl,
-        birth_date: person.birth_date,
-        age: person.age,
-        user_id: person.id,
-        open: false,
-        subordinates: []
-      }))
-      setBirthdays(formattedData)
-    } catch (error) {
-      console.error('Error fetching birthdays:', error)
-    } finally {
-      setLoading(false)
+    } else {
+      try {
+        const response = await fetch(`${BASE_URL}/api/today-birth`, {
+          headers: {
+            'Authorization': `Bearer ${getAuthToken()}`,
+            'Content-Type': 'application/json',
+          },
+        }
+        )
+        const data = await response.json()
+        // Format data to match Employee interface
+        const formattedData = data.map((person: any) => ({
+          id: person.id.toString(),
+          name: person.full_name,
+          position: person.position?.name || '',
+          department: person.section?.name || '',
+          imageUrl: person.imageUrl,
+          birth_date: person.birth_date,
+          age: person.age,
+          user_id: person.id,
+          open: false,
+          subordinates: []
+        }))
+        setBirthdays(formattedData)
+      } catch (error) {
+        console.error('Error fetching birthdays:', error)
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
