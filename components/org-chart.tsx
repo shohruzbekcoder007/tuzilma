@@ -566,8 +566,23 @@ export default function OrgChart() {
         <div className="rais relative z-10">
           <EmployeeCard employee={sampleData1} highlight={isEmployeeHighlighted(sampleData1)} />
         </div>
-        <div className="flex items-center gap-8 border-t-2 pt-4 tartib" style={{ alignItems: 'start' }}>
-          <div className="flex flex-wrap justify-between gap-8">
+        <div
+          className={`flex items-center border-t-2 pt-4 tartib ${sampleData1?.subordinates?.length === 1
+            ? "gap-[350px]"
+            : sampleData1?.subordinates?.length === 2
+              ? "gap-[240px]"
+              : "gap-[50px]" // Default value
+            }`}
+          style={{ alignItems: 'start' }}
+        >
+          <div
+            className={`flex flex-wrap justify-between ${sampleData1?.subordinates?.length === 1
+                ? "gap-[350px]"
+                : sampleData1?.subordinates?.length === 2
+                  ? "gap-[275px]"
+                  : "gap-[50px]" // Default value
+              }`}
+          >
             {sampleData1?.subordinates?.length > 0 && sampleData1?.subordinates?.map((employee) => (
               <div key={employee.id} className="flex flex-col gap-8 zamlar">
                 <div className="org-chart-item org-chart-item1" onClick={(event) => handleOpen(event, employee)}>

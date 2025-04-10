@@ -101,24 +101,23 @@
   position: relative;
 }
 
-.org-chart-item::before {
+.org-chart-item::before,
+.org-chart-item1::before {
   content: "";
   position: absolute;
-  left: -33px;
   top: 50%;
-  width: 34px;
   height: 2px;
   background-color: #e5e7eb;
 }
 
+.org-chart-item::before {
+  left: -33px;
+  width: 34px;
+}
+
 .org-chart-item1::before {
-  content: "";
-  position: absolute;
   left: -16px;
-  top: 50%;
   width: 16px;
-  height: 2px;
-  background-color: #e5e7eb;
   display: none;
 }
 
