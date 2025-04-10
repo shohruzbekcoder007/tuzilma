@@ -567,7 +567,7 @@ export default function OrgChart() {
           <EmployeeCard employee={sampleData1} highlight={isEmployeeHighlighted(sampleData1)} />
         </div>
         <div className="flex items-center gap-8 border-t-2 pt-4 tartib" style={{ alignItems: 'start' }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-wrap justify-between gap-8">
             {sampleData1?.subordinates?.length > 0 && sampleData1?.subordinates?.map((employee) => (
               <div key={employee.id} className="flex flex-col gap-8 zamlar">
                 <div className="org-chart-item org-chart-item1" onClick={(event) => handleOpen(event, employee)}>
