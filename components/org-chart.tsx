@@ -405,10 +405,6 @@ export default function OrgChart() {
     }
   }, [searchQuery, originalData2, processEmployee]);
 
-  useEffect(() => {
-    console.log(sampleData2, "<-sampleData2")
-  }, [sampleData2])
-
   const handleOpen = (event: React.MouseEvent, employee: Employee) => {
     event.stopPropagation()
     const findAndUpdateEmployee = (employees: Employee[], targetId: string): boolean => {

@@ -64,9 +64,6 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       setSearchEmployees([])
     }
   }, [searchQuery])
-  useEffect(() => {
-    console.log(optionQuery, "optionquery")
-  }, [optionQuery])
 
   return (
     <SearchContext.Provider value={{
@@ -78,7 +75,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       setSearchEmployees,
       optionQuery,
       setOptionQuery,
-      regions, 
+      regions,
       setRegions,
     }}>
       {children}

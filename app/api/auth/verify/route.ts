@@ -6,8 +6,6 @@ export async function POST(request: NextRequest) {
 
   const auth_token = request.cookies.get('auth_token')?.value || request.headers.get('authorization')?.split(' ')[1]
 
-  console.log(auth_token, "<---auth_token")
-
   if (!auth_token || !auth_token.startsWith('Bearer ')) {
     return NextResponse.json(
       { error: 'Unauthorized' },
@@ -25,8 +23,6 @@ export async function POST(request: NextRequest) {
     })
 
     const data = await response.json()
-
-    // console.log(data, "<-shu verify")
 
     if (data.code === 'token_not_valid') {
       return NextResponse.json(

@@ -21,7 +21,6 @@ export async function middleware(request: NextRequest) {
   // If the user is authenticated and trying to access a protected route
   try {
     const token = request.cookies.get('auth_token')?.value
-    // console.log(token, "<-token")
     if (!token) {
       // throw new Error('No auth token found')
       const url = new URL('/login', request.url)
@@ -37,11 +36,9 @@ export async function middleware(request: NextRequest) {
       body: JSON.stringify({ token }),
     })
 
-    // console.log(response, "<-response")
 
     const data = await response.json()
 
-    // console.log(data, "<-data")
 
     if (data.code === 'token_not_valid') {
       const response = NextResponse.redirect(new URL('/login', request.url))
