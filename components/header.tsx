@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Building2, LogOut, Search } from "lucide-react"
+import { Building2, Loader2, LogOut, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,7 +25,7 @@ export function Header() {
   const { setSearchQuery, searchQuery, searchEmployees, optionQuery, setOptionQuery, regions, setRegions } = useSearch()
   const [searchResults, setSearchResults] = useState<Employee[]>([])
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(false); // Yuklanish holati
 
 
   useEffect(() => {
@@ -136,9 +136,7 @@ export function Header() {
           </div>
           {
             regions.length > 0 ? (
-              <a href={`${BASE_URL}/api/employees-export?soato=${optionQuery}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
                 onClick={(event) => {
                   event.preventDefault(); // Default link harakatini to'xtatish
                   const token = getAuthToken();
@@ -146,7 +144,7 @@ export function Header() {
                     console.error("Authorization token not found");
                     return;
                   }
-
+                  setIsLoading(true);
                   fetch(`${BASE_URL}/api/employees-export?soato=${optionQuery}`, {
                     method: "GET",
                     headers: {
@@ -169,17 +167,18 @@ export function Header() {
                       a.click();
                       a.remove();
                     })
-                    .catch((error) => console.error("Error exporting file:", error));
+                    .catch((error) => console.error("Error exporting file:", error))
+                    .finally(() => setIsLoading(false)); // Yuklanishni tugatish
                 }}
               >
-                <Button variant="outline" size="sm" className="hidden md:block">
-                  XLSX
+                <Button variant="outline" size="sm" className="hidden w-[70px] flex justify-center align-center">
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (<span>
+                    XLSX
+                  </span>)}
                 </Button>
-              </a>
+              </button>
             ) : (
-              <a href={`${BASE_URL}/api/employees-export`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
                 onClick={(event) => {
                   event.preventDefault(); // Default link harakatini to'xtatish
                   const token = getAuthToken();
@@ -187,7 +186,7 @@ export function Header() {
                     console.error("Authorization token not found");
                     return;
                   }
-
+                  setIsLoading(true);
                   fetch(`${BASE_URL}/api/employees-export`, {
                     method: "GET",
                     headers: {
@@ -210,13 +209,17 @@ export function Header() {
                       a.click();
                       a.remove();
                     })
-                    .catch((error) => console.error("Error exporting file:", error));
+                    .catch((error) => console.error("Error exporting file:", error))
+                    .finally(() => setIsLoading(false)); // Yuklanishni tugatish
                 }}
               >
-                <Button variant="outline" size="sm" className="hidden md:block">
-                  XLSX
+                <Button variant="outline" size="sm" className="hidden w-[70px] flex justify-center align-center">
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (<span>
+                    XLSX
+                  </span>)}
+
                 </Button>
-              </a>
+              </button>
             )
           }
 
