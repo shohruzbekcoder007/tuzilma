@@ -134,7 +134,42 @@ export function Header() {
               )}
             </div>
           </div>
-          <a href={`${BASE_URL}/api/employees-export`} target="_blank" rel="noopener noreferrer">
+          <a href={`${BASE_URL}/api/employees-export`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(event) => {
+              event.preventDefault(); // Default link harakatini to'xtatish
+              const token = getAuthToken();
+              if (!token) {
+                console.error("Authorization token not found");
+                return;
+              }
+
+              fetch(`${BASE_URL}/api/employees-export`, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`,
+                },
+              })
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Failed to fetch the export file");
+                  }
+                  return response.blob();
+                })
+                .then((blob) => {
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = "employees-export.xlsx";
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                })
+                .catch((error) => console.error("Error exporting file:", error));
+            }}
+          >
             <Button variant="outline" size="sm" className="hidden md:block">
               XLSX
             </Button>
