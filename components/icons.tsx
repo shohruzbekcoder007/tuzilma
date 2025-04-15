@@ -1,4 +1,4 @@
-import { EyeIcon, Loader2, Building, Mail, Phone, MapPin, GraduationCap, CircleUserRound, Calendar, Briefcase, User, FileText } from "lucide-react"
+import { EyeIcon, Loader2, Building, Mail, Phone, MapPin, GraduationCap, CircleUserRound, Calendar, Briefcase, User, FileText, Globe } from "lucide-react"
 
 export const Icons = {
   more: EyeIcon,
@@ -12,5 +12,6 @@ export const Icons = {
   business: Briefcase,
   education: GraduationCap,
   user: User,
-  fileText: FileText
+  fileText: FileText,
+  globe: Globe
 }

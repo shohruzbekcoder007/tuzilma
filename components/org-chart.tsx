@@ -14,15 +14,18 @@ import { Loader2 } from "lucide-react"
 import { getAuthToken } from "@/lib/utils"
 
 interface Institution {
-  institution_type: string
   institution_name: string
   degree: string
   speciality: string
-  diploma_serial: string
-  diploma_number: string
-  diploma_type: string
   edu_starting_date: string
   edu_finishing_date: string
+  is_locality: boolean
+}
+interface WorkTravel {
+  country: string
+  travel_start: string
+  travel_end: string
+  purpose: string
 }
 
 interface WorkHistory {
@@ -54,7 +57,7 @@ interface Employee {
   document?: string
   user_id?: number
   locality_institutions?: Institution[]
-  foreign_institutions?: Institution[]
+  work_travels?: WorkTravel[]
   work_history?: WorkHistory[]
 }
 
@@ -116,32 +119,17 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   useEffect(() => {
     if (isOpen) {
       setStaff(employee)
-      if (regions.length > 0) {
-        fetch(`${BASE_URL}/api/employees/${employee.user_id}?soato=${optionQuery}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getAuthToken()}`,
-          }
-        }).then(response => response.json()).then(data => {
-          setStaff(data)
-        }).catch(error => {
-          console.error('Error fetching employee details:', error)
-        })
-      } else {
-        fetch(`${BASE_URL}/api/employees/${employee.user_id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getAuthToken()}`,
-          }
-        }).then(response => response.json()).then(data => {
-          setStaff(data)
-        }).catch(error => {
-          console.error('Error fetching employee details:', error)
-        })
-      }
-
+      fetch(`${BASE_URL}/api/employees/${employee.user_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`,
+        }
+      }).then(response => response.json()).then(data => {
+        setStaff(data)
+      }).catch(error => {
+        console.error('Error fetching employee details:', error)
+      })
     }
   }, [isOpen, optionQuery])
 
@@ -271,9 +259,9 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
 
               <Tabs defaultValue="education" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 h-[62px] mb-2 ">
-                  <TabsTrigger value="education" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари <br />(Махаллий)</TabsTrigger>
-                  <TabsTrigger value="education1" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари <br />(Хорижий)</TabsTrigger>
+                  <TabsTrigger value="education" className="flex items-center gap-2 h-[100%]"><Icons.education className="h-5 w-5 text-gray-400" /> Таълим муассасалари</TabsTrigger>
                   <TabsTrigger value="general" className="flex items-center gap-2 h-[100%]"><Icons.business className="h-5 w-5 text-gray-400" /> Меҳнат фаолияти</TabsTrigger>
+                  <TabsTrigger value="work_travels" className="flex items-center gap-2 h-[100%]"><Icons.globe className="h-5 w-5 text-gray-400" />Хизмат сафарлари</TabsTrigger>
                 </TabsList>
                 <TabsContent value="education">
                   <div className="border rounded-lg overflow-y-auto max-h-[250px]">
@@ -283,6 +271,7 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                           <th className="py-2 px-4 text-sm" align="left">Муассаса</th>
                           <th className="py-2 px-4 text-sm" align="left">Даража</th>
                           <th className="py-2 px-4 text-sm" align="left">Мутахассислик</th>
+                          <th className="py-2 px-4 text-sm" align="left">Тури</th>
                           <th className="py-2 px-4 text-sm" align="left">Тугаллаган санаси</th>
                         </tr>
                       </thead>
@@ -292,6 +281,7 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                             <td className="py-2 px-4 text-sm">{edu.institution_name}</td>
                             <td className="py-2 px-4 text-sm">{edu.degree}</td>
                             <td className="py-2 px-4 text-sm">{edu.speciality}</td>
+                            <td className="py-2 px-4 text-sm">{edu.is_locality ? "Маҳаллий" : "Хорижий"}</td>
                             <td className="py-2 px-4 text-sm">{edu.edu_finishing_date}</td>
                           </tr>
                         ))}
@@ -299,24 +289,22 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                     </table>
                   </div>
                 </TabsContent>
-                <TabsContent value="education1">
+                <TabsContent value="work_travels">
                   <div className="border rounded-lg overflow-y-auto max-h-[250px]">
                     <table className="w-full">
                       <thead className="bg-gray-100 sticky top-0">
                         <tr className="border-b">
-                          <th className="py-2 px-4 text-sm" align="left">Муассаса</th>
-                          <th className="py-2 px-4 text-sm" align="left">Даража</th>
-                          <th className="py-2 px-4 text-sm" align="left">Мутахассислик</th>
-                          <th className="py-2 px-4 text-sm" align="left">Тугаллаган санаси</th>
+                          <th className="py-2 px-4 text-sm" align="left">Давлати</th>
+                          <th className="py-2 px-4 text-sm" align="left">Сафар санаси</th>
+                          <th className="py-2 px-4 text-sm" align="left">Сафар мақсади</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {staff?.foreign_institutions?.map((edu, index) => (
+                        {staff?.work_travels?.map((travel, index) => (
                           <tr key={index} className="border-b last:border-b-0">
-                            <td className="py-2 px-4 text-sm">{edu.institution_name}</td>
-                            <td className="py-2 px-4 text-sm">{edu.degree}</td>
-                            <td className="py-2 px-4 text-sm">{edu.speciality}</td>
-                            <td className="py-2 px-4 text-sm">{edu.edu_finishing_date}</td>
+                            <td className="py-2 px-4 text-sm">{travel.country}</td>
+                            <td className="py-2 px-4 text-sm">{travel.travel_start}</td>
+                            <td className="py-2 px-4 text-sm">{travel.purpose}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -573,10 +561,10 @@ export default function OrgChart() {
         >
           <div
             className={`flex flex-wrap justify-between ${sampleData1?.subordinates?.length === 1
-                ? "gap-[350px]"
-                : sampleData1?.subordinates?.length === 2
-                  ? "gap-[275px]"
-                  : "gap-[50px]" // Default value
+              ? "gap-[350px]"
+              : sampleData1?.subordinates?.length === 2
+                ? "gap-[275px]"
+                : "gap-[50px]" // Default value
               }`}
           >
             {sampleData1?.subordinates?.length > 0 && sampleData1?.subordinates?.map((employee) => (
