@@ -26,6 +26,8 @@ interface WorkTravel {
   travel_start: string
   travel_end: string
   purpose: string
+  organizer: string
+  name: string
 }
 
 interface WorkHistory {
@@ -295,8 +297,11 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                       <thead className="bg-gray-100 sticky top-0">
                         <tr className="border-b">
                           <th className="py-2 px-4 text-sm" align="left">Давлати</th>
-                          <th className="py-2 px-4 text-sm" align="left">Сафар санаси</th>
-                          <th className="py-2 px-4 text-sm" align="left">Сафар мақсади</th>
+                          <th className="py-2 px-4 text-sm" align="left">Бошланиш санаси</th>
+                          <th className="py-2 px-4 text-sm" align="left">Тугаш санаси</th>
+                          <th className="py-2 px-4 text-sm" align="left">Ташкилотчи</th>
+                          <th className="py-2 px-4 text-sm" align="left">Қисқа мазмуни</th>
+                          <th className="py-2 px-4 text-sm" align="left">Тадбир номи</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -304,7 +309,10 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                           <tr key={index} className="border-b last:border-b-0">
                             <td className="py-2 px-4 text-sm">{travel.country}</td>
                             <td className="py-2 px-4 text-sm">{travel.travel_start}</td>
+                            <td className="py-2 px-4 text-sm">{travel.travel_end}</td>
+                            <td className="py-2 px-4 text-sm">{travel.organizer}</td>
                             <td className="py-2 px-4 text-sm">{travel.purpose}</td>
+                            <td className="py-2 px-4 text-sm">{travel.name}</td>
                           </tr>
                         ))}
                       </tbody>
