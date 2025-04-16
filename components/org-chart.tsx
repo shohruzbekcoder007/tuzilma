@@ -70,7 +70,6 @@ interface EmployeeCardProps {
 }
 
 export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
-  console.log(employee, 'employee')
   const { setSearchEmployees, optionQuery, regions } = useSearch()
 
   useEffect(() => {
@@ -91,7 +90,7 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
 
   const [isOpen, setIsOpen] = useState(false)
   const [staff, setStaff] = useState<Employee>(employee)
-
+  console.log(staff, "staff")
   const dataToString = (date: string) => {
     const dateObj = new Date(date)
     let year = dateObj.getFullYear();
@@ -152,7 +151,7 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
           <p className="text-sm text-muted-foreground leading-none pb-3">{employee.position}</p>
           <p className="text-xs text-muted-foreground">{employee.department}</p>
           {
-            employee.employement_form===1 && (
+            employee.employement_form === 1 && (
               <p className="text-xs font-bold text-blue-500 border border-blue-500 rounded-full p-[2px] absolute top-[-10px] right-[-10px] ">0.5</p>
             )
           }
@@ -220,7 +219,15 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
                 </div>
                 <div className="w-[60%] flex flex-col items-center">
                   <h2 className="text-2xl font-bold mb-1 text-center">{staff.name}</h2>
-                  <p className="text-gray-600 mb-2 text-center">{staff.position}</p>
+                  <p className="text-gray-600 mb-2 text-center">{staff.position}
+                    {
+                      staff.employement_form === 1 && (
+                        <span className="text-xs font-bold text-blue-500 mx-[10px] p-[2px]">(0.5)</span>
+                      )
+                    }
+
+                  </p>
+                  {/* shu yer */}
                   <div className="inline-block bg-primary text-white text-sm px-3 py-1 rounded-full my-auto">
                     <p className="text-center">{staff.department}</p>
                   </div>
