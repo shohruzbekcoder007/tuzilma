@@ -46,6 +46,7 @@ interface Employee {
   imageUrl?: string
   open: boolean
   subordinates: Employee[]
+  employement_form?: number
   ip_phone?: string
   email?: string
   birth_date?: string
@@ -69,6 +70,7 @@ interface EmployeeCardProps {
 }
 
 export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
+  console.log(employee, 'employee')
   const { setSearchEmployees, optionQuery, regions } = useSearch()
 
   useEffect(() => {
@@ -145,10 +147,15 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
           />
           <AvatarFallback>{employee.name?.[0]}</AvatarFallback>
         </Avatar>
-        <div className="flex-1">
+        <div className="flex-1 relative">
           <h3 className="font-medium leading-none pb-1">{employee.name}</h3>
           <p className="text-sm text-muted-foreground leading-none pb-3">{employee.position}</p>
           <p className="text-xs text-muted-foreground">{employee.department}</p>
+          {
+            employee.employement_form===1 && (
+              <p className="text-xs font-bold text-blue-500 border border-blue-500 rounded-full p-[2px] absolute top-[-10px] right-[-10px] ">0.5</p>
+            )
+          }
         </div>
       </div>
 
