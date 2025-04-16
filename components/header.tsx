@@ -29,6 +29,10 @@ export function Header() {
 
 
   useEffect(() => {
+    setSearchQuery("")
+  }, [optionQuery])
+
+  useEffect(() => {
     fetch(`${BASE_URL}/api/regions`, {
       method: 'GET',
       headers: {
