@@ -1,6 +1,6 @@
 "use client"
 
-import { Briefcase, Building, CircleUserRound, Search, Settings, Shield, User, UserMinus, UserRound, UserRoundCog, Users, UserSearch } from "lucide-react"
+import { Baby, Briefcase, Building, CircleUserRound, Search, Settings, Shield, User, UserMinus, UserRound, UserRoundCog, Users, UserSearch } from "lucide-react"
 import { Button } from "./ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
 import { useEffect, useMemo, useState } from "react"
@@ -20,7 +20,8 @@ interface Statistic {
   "open_work_count": number,
   "half_workers_count": number,
   "male_employees": number,
-  "female_employees": number
+  "female_employees": number,
+  "child_rearing_counts": number
 }
 
 interface Department {
@@ -46,11 +47,23 @@ interface Work {
   employement_form: string
 }
 
+interface ChildRearingEmployee {
+  id: number
+  full_name: string
+  department: string
+  section: string
+  position: string
+  employement_form: number
+  age: number
+}
+
 export function Footer() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isChildRearingOpen, setIsChildRearingOpen] = useState(false)
 
   const [statistic, setStatistic] = useState<Statistic>({} as Statistic)
   const [workList, setWorkList] = useState<Work[]>([] as Work[])
+  const [childRearingList, setChildRearingList] = useState<ChildRearingEmployee[]>([] as ChildRearingEmployee[])
   const { optionQuery, regions } = useSearch()
 
 
@@ -113,6 +126,36 @@ export function Footer() {
       }
     }
   }, [isOpen, optionQuery])
+
+  useEffect(() => {
+    if (isChildRearingOpen) {
+      if (regions.length > 0) {
+        fetch(`${BASE_URL}/api/in-child-rearing?soato=${optionQuery}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`,
+          }
+        }).then(response => response.json()).then(data => {
+          setChildRearingList(data.data || [])
+        }).catch(error => {
+          console.error('Error fetching child rearing list:', error)
+        })
+      } else {
+        fetch(`${BASE_URL}/api/in-child-rearing`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getAuthToken()}`,
+          }
+        }).then(response => response.json()).then(data => {
+          setChildRearingList(data.data || [])
+        }).catch(error => {
+          console.error('Error fetching child rearing list:', error)
+        })
+      }
+    }
+  }, [isChildRearingOpen, optionQuery])
 
 
   const [year, setYear] = useState<number | null>(null);
@@ -192,6 +235,49 @@ export function Footer() {
                               <td className="py-2 px-4 text-sm">{work.department?.name}</td>
                               <td className="py-2 px-4 text-sm">{work.section?.name}</td>
                               <td className="py-2 px-4 text-sm">{work.employement_form}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              
+              <Dialog open={isChildRearingOpen} onOpenChange={setIsChildRearingOpen}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  style={{ fontSize: '12px' }}
+                  className="text-sm text-muted-foreground flex items-center gap-1"
+                  onClick={() => setIsChildRearingOpen(true)}
+                >
+                  <Baby className="h-4 w-4" /> Болани парвариш - <span className="font-bold text-pink-500">{statistic?.child_rearing_counts || 0}</span>
+                </Button>
+                <DialogContent className="max-w-[850px] w-[90vw]">
+                  <DialogHeader>
+                    <DialogTitle>Болани парвариш қилиш таътилидаги ходимлар рўйхати</DialogTitle>
+                  </DialogHeader>
+                  <div className="overflow-auto max-h-[60vh]">
+                    <div className="overflow-auto max-h-[calc(60vh-4.5rem)]">
+                      <table className="w-full">
+                        <thead className="bg-gray-500/90 sticky top-0">
+                          <tr>
+                            <th className="py-2 px-4 text-sm text-left text-white">Ф.И.О</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Лавозим</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Бўлим номи</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Ёши</th>
+                            <th className="py-2 px-4 text-sm text-left text-white">Штат</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {childRearingList.map(employee => (
+                            <tr key={employee.id} className="border-b">
+                              <td className="py-2 px-4 text-sm">{employee.full_name}</td>
+                              <td className="py-2 px-4 text-sm">{employee.position}</td>
+                              <td className="py-2 px-4 text-sm">{employee.section}</td>
+                              <td className="py-2 px-4 text-sm">{employee.age}</td>
+                              <td className="py-2 px-4 text-sm">{employee.employement_form === 1 ? '0.5' : '1.0'}</td>
                             </tr>
                           ))}
                         </tbody>
