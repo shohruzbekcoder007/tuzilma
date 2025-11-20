@@ -154,12 +154,12 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
           <p className="text-xs text-muted-foreground">{employee.department}</p>
           {
             employee.employement_form === 1 && (
-              <p className="text-xs font-bold text-blue-500 border border-blue-500 rounded-full p-[2px] absolute top-[-10px] right-[-10px] ">0.5</p>
+              <p className="text-xs font-bold text-blue-500 border border-blue-500 rounded-full p-[2px] absolute bottom-[-10px] right-[-10px] ">0.5</p>
             )
           }
           {
             employee.is_have_child_rearing && (
-              <p className="text-xs font-bold text-pink-500 border border-pink-500 rounded-full px-2 py-[2px] absolute top-[-10px] left-[-10px]" title="Болани парвариш қилиш таътилида">
+              <p className="text-xs font-bold text-pink-500 border border-pink-500 rounded-full px-2 py-[2px] absolute top-[-10px] right-[-10px]" title="Болани парвариш қилиш таътилида">
                 👶 {employee.child_rearing_counts || 0}
               </p>
             )

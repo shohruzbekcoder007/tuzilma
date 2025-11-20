@@ -252,7 +252,7 @@ export function Footer() {
                   className="text-sm text-muted-foreground flex items-center gap-1"
                   onClick={() => setIsChildRearingOpen(true)}
                 >
-                  <Baby className="h-4 w-4" /> Болани парвариш - <span className="font-bold text-pink-500">{statistic?.child_rearing_counts || 0}</span>
+                  <Baby className="h-4 w-4" /> Бола парваришида - <span className="font-bold text-pink-500">{statistic?.child_rearing_counts || 0}</span>
                 </Button>
                 <DialogContent className="max-w-[850px] w-[90vw]">
                   <DialogHeader>
