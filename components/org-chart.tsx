@@ -139,6 +139,13 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
   }, [isOpen, optionQuery])
 
 
+  // Check if employee or subordinate is on child-rearing leave
+  const hasChildRearingLeave = employee.is_have_child_rearing || 
+    employee.name?.toLowerCase().includes('бола парвариши') ||
+    (employee.subordinates && employee.subordinates.some(sub => 
+      sub.name?.toLowerCase().includes('бола парвариши')
+    ))
+
   return (
     <Card id={"employee" + employee.id} className={`p-4 w-[300px] example cursor-pointer relative z-1 ${highlight ? 'ring-2 ring-primary' : ''}`}>
       <div className="flex items-center gap-4">
@@ -155,9 +162,9 @@ export function EmployeeCard({ employee, highlight }: EmployeeCardProps) {
           
           {/* Badges container */}
           <div className="absolute top-[-10px] right-[-10px] flex gap-1 items-center">
-            {employee.is_have_child_rearing && (
+            {hasChildRearingLeave && (
               <p className="text-xs font-bold text-pink-500 border border-pink-500 rounded-full px-1 py-[2px]" title="Болани парвариш қилиш таътилида">
-                👶
+                👶 {employee.child_rearing_counts || ''}
               </p>
             )}
             {employee.employement_form === 1 && (
